@@ -1,0 +1,68 @@
+{
+  "first_run": {
+    "parity": 0.903,
+    "fields_compared": 72,
+    "note": "first run: 5 of the 7 differences were a bug in my forum detector (it matched 'District' in 'District Legal Services Authority'); 2 were real (Hindi 'इनवॉइस' not recognised as an invoice)"
+  },
+  "pairs": 8,
+  "fields_compared": 72,
+  "fields_matching": 72,
+  "parity": 1.0,
+  "rows": [
+    {
+      "pair": "deposit, normal",
+      "fields": 9,
+      "match": 9,
+      "differences": {}
+    },
+    {
+      "pair": "deposit, time-barred",
+      "fields": 9,
+      "match": 9,
+      "differences": {}
+    },
+    {
+      "pair": "deposit, large",
+      "fields": 9,
+      "match": 9,
+      "differences": {}
+    },
+    {
+      "pair": "refund, normal",
+      "fields": 9,
+      "match": 9,
+      "differences": {}
+    },
+    {
+      "pair": "refund, State Commission",
+      "fields": 9,
+      "match": 9,
+      "differences": {}
+    },
+    {
+      "pair": "refund, no proof",
+      "fields": 9,
+      "match": 9,
+      "differences": {}
+    },
+    {
+      "pair": "salary, normal",
+      "fields": 9,
+      "match": 9,
+      "differences": {}
+    },
+    {
+      "pair": "salary, large + no written demand",
+      "fields": 9,
+      "match": 9,
+      "differences": {}
+    }
+  ],
+  "perf": {
+    "messages": 1200,
+    "p50_ms": 0.78,
+    "p95_ms": 2.14,
+    "max_ms": 9.1,
+    "msgs_per_sec_single_core": 1058
+  }
+}

@@ -1,0 +1,65 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Nyay Saathi - Solution Doc (Kuku Problem 2)</title>
+<style>
+@page{size:A4;margin:10mm 12mm}
+*{box-sizing:border-box}body{font:9.2pt/1.33 -apple-system,"Helvetica Neue",Arial,sans-serif;color:#1b2230;margin:0}
+h1{font-size:15pt;margin:0 0 1px}.sub{color:#556;font-size:8.6pt;margin-bottom:5px}
+h2{break-after:avoid;font-size:10.2pt;margin:7px 0 2px;color:#1f5f4a;border-bottom:1px solid #cfe0d8;padding-bottom:1px}
+p{margin:2px 0}ul{margin:2px 0 2px 15px;padding:0}li{margin:0 0 1px}
+table{border-collapse:collapse;width:100%;margin:3px 0;font-size:8.6pt}th,td{border:1px solid #cdd5d1;padding:2px 5px;text-align:left;vertical-align:top}th{background:#eef4f1}tr{break-inside:avoid}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tag{background:#eef4f1;border-radius:3px;padding:0 4px;font-size:8.2pt}
+.warn{background:#fff6e5;border-left:3px solid #d9a23b;padding:3px 6px;margin:4px 0}
+code{font-size:8.3pt;background:#f1f1ee;padding:0 2px}
+</style></head><body>
+
+<h1>Nyay Saathi: an AI legal helper for everyday problems in India</h1>
+<div class="sub">Kuku AI Generalist assignment, <b>Problem 2: Build an AI Lawyer</b> · Karan · 230121033 · Engineering Physics · Code, outputs and demo video linked in the submission form</div>
+
+<h2>1. What I built, and why this scope</h2>
+<p>A chat assistant (text, plus browser voice in English/Hindi) that takes a messy story and helps the person act: it <b>builds the case</b> (what happened, when, how much, what proof), <b>explains where they stand and their options</b> in plain language, <b>drafts a legal notice</b> (English or Hindi), and lets them <b>practise the argument</b> with the assistant playing the other side. It also <b>explains a legal notice the person has <i>received</i></b> (with a draft reply), gives an <b>evidence checklist</b> and a <b>reminder calendar (.ics)</b>, lets them <b>download / print</b> their case file, <b>masks Aadhaar / PAN / phone</b> if they paste them, and has a <b>one-shot mode</b> that turns any pasted story into a full report.</p>
+<p><b>Scope: three problems, in depth, plus received notices</b>: (1) a landlord keeping the security deposit, (2) a refund / defective product or service, (3) unpaid salary. I chose them because they are the brief's own examples, are everyday and money-sized, are decided mostly on documents (so a chat can really help), and each has a clear route (civil court, Consumer Commission, Labour Commissioner). Family, criminal, property-title, tax, cyber and builder/RERA matters are <b>deliberately out of scope</b>: the assistant says so and points to a lawyer / free legal aid (NALSA 15100).</p>
+
+<h2>2. Assumptions (the brief was silent)</h2>
+<ul>
+<li>User is an ordinary adult on a phone writing English, Hindi or Hinglish, with a money claim and no lawyer yet. "Help them act" means <b>information + paperwork + rehearsal</b>, not filing; a real lawyer is always recommended before filing.</li>
+<li>Free tier only. With no API key available, the default build runs <b>offline at zero cost</b>; an LLM is an optional plug-in.</li>
+<li>Legal content was drafted from my own knowledge, then checked on 8 Nov 2026 against <b>India Code, Gazette notifications and official department sources</b> where available; some practice guidance uses explainers. <i>This is not a lawyer's review.</i> The check <b>found two outdated entries</b>: the Payment of Wages Act and the Industrial Disputes Act were replaced on 21 Nov 2025 by the Code on Wages and the Industrial Relations Code. These were corrected, and each entry stores its verification status. Limits and state rules can change, so answers ask users to confirm them.</li>
+</ul>
+
+<h2>3. How it works: what is AI, what is code, where a human stays</h2>
+<table><tr><th style="width:21%">Step</th><th style="width:22%">Done by</th><th>Detail</th></tr>
+<tr><td>Language + problem type</td><td>Code (keyword lexicon, EN/HI/Hinglish)</td><td>Unclear or out-of-scope → asks or refers; never guesses. Emergencies (arrest, violence) → 112 / NALSA.</td></tr>
+<tr><td>Case building</td><td>Code (regex slot-filling)</td><td>Asks ≤4 questions: when, amount, proof, asked-in-writing. If several amounts appear it asks which is owed (a bug found in testing).</td></tr>
+<tr><td>Legal content</td><td><b>Closed knowledge base</b> (16 vetted entries, EN+HI)</td><td>The only place law lives. Every answer lists its sources with a link and confidence.</td></tr>
+<tr><td>Deadlines, forum</td><td>Code</td><td>Limitation check (3 yrs deposit / 2 yrs consumer) with near/expired warnings; Consumer Commission limits use value paid as consideration, which may differ from the refund due.</td></tr>
+<tr><td>Notice drafting</td><td>Templates</td><td>Fills only facts the user gave; unknowns stay as <code>[BRACKETS]</code>; never invents facts.</td></tr>
+<tr><td>Notice you received</td><td>Code + template</td><td>Reads sender, amount, deadline, threats (court / police / cheque / bank loan); flags urgent cases; drafts a reply with <code>[CHOOSE ONE]</code> for dispute / part / pay.</td></tr>
+<tr><td>Privacy</td><td>Code</td><td>Detects and masks IDs before anything is routed, stored, exported or sent to an LLM; warns the user. Failure log is opt-in and redacted.</td></tr>
+<tr><td>Evidence checklist, calendar, export</td><td>Code</td><td>Proof ticked vs missing; approximate dates (send notice, escalate, time-limit review) as .ics; summary, notice, checklist as print-to-PDF or .txt.</td></tr>
+<tr><td>Practice mode</td><td>Scripted opponent + rule-based coaching</td><td>4 realistic objections per topic; tip after each reply; checklist at the end.</td></tr>
+<tr><td>Other languages, plain wording</td><td><b>LLM (optional, swappable)</b></td><td>Gemini / OpenAI-compatible / Anthropic via env vars. Translates in, simplifies out; output must pass the guard.</td></tr>
+<tr><td>Human in the loop</td><td>Lawyer + reviewer</td><td>Lawyer reviews the knowledge base before launch and quarterly; assistant routes to a real lawyer on big amounts, near time limits, thin proof.</td></tr></table>
+
+<h2>4. How it avoids inventing laws, sections and cases</h2>
+<p>Five layers, from "can't" to "caught": <b>(a)</b> the model never writes legal content (retrieval-free closed list, so there is nothing to confabulate); <b>(b)</b> an <b>output guard</b> scans every message and blocks any Act, Section, case-style citation (<i>X v. Y</i>, AIR, SCC) or <i>new number</i> not in the knowledge base, replacing it with "check with a lawyer"; <b>(c)</b> case-law requests are refused ("AI tools often invent them"); <b>(d)</b> prompt-injection and "guarantee I'll win" are handled; <b>(e)</b> sections are cited only where confidence is high, otherwise just the Act name.</p>
+
+<h2 style="break-before:page">5. How I know it works, and where it fails</h2>
+<table><tr><th>Check</th><th>Result</th></tr>
+<tr><td><b>26 scripted conversations</b> I wrote (EN, Hindi, Hinglish; happy paths, time-barred, large claim, divorce, arrest, case-law request, injection, vague, gibberish, multiple amounts, received notices, checklists)</td><td><b>26/26 pass</b> after fixes; first run was 11/15 (see below). Raw transcripts in <code>outputs/transcripts/</code></td></tr><tr><td><b>38 extra checks</b>: exports, calendar, privacy, date parsing, LLM/Gemini configuration and Punjabi translation, 5 one-shot reports</td><td><b>38/38 pass</b>; all shown in <code>outputs/dashboard.html</code></td></tr><tr><td><b>Problem-type detection</b>, labeled sets (deposit / refund / salary / out-of-scope; EN, Hindi, Hinglish)</td><td>First run <b>83%</b> correct, 2 wrong. After tuning on it: 98% (optimistic). On a <b>frozen set of 30 fresh messages: old rules 73% &rarr; upgraded rules 80%, 0 wrong</b> (phrase patterns, "ask if two types are close" rule, word-boundary fix). Earlier held-out set: 58% &rarr; 71%, wrong advice 8% &rarr; 4%.</td></tr>
+<tr><td><b>English vs Hindi parity</b>: same 8 stories told in both languages; speed</td><td><b>100%</b> of 72 fields match (first run 90%: 5 diffs were my test's bug, 2 real: Hindi "&#2311;&#2344;&#2357;&#2377;&#2311;&#2360;" not read as invoice). Recent offline runs measured p95 between <b>1.6 and 2.7 ms</b>/message.</td></tr>
+<tr><td><b>Guard attack</b>: a fake LLM that hallucinates a fake Act, wrong section, fake case, AIR citation, changed number, section with no Act</td><td><b>7/7 blocked</b>; an honest rewrite is accepted; end-to-end with a hallucinating model the user still gets the grounded text (<code>outputs/results.json</code>)</td></tr></table>
+<p><b>Bugs my tests found (all fixed):</b> keyword "lease" matched inside "p<i>lease</i>" (substring matching), so every polite message leaned to <i>deposit</i>; the amount parser swallowed "2 months<b>,</b> Rs 70000" (a comma read as a number); the guard wrongly blocked a correct answer because of a long official Rules title; "80000 sal<i>ary</i>" was parsed as "80000 <i>saal</i>" (years); an unclassifiable message made it repeat one question forever; the first of several amounts was silently taken; the "will I win?" warning was lost when asked in an earlier turn; running my own sample stories showed the date parser used the <i>tenancy start</i> date instead of the move-out date and could not read Hindi months, which would give a false "time-barred" warning.</p>
+<div class="warn"><b>Where it still fails (honest list; raw in <code>outputs/probes.md</code>):</b>
+<ul><li><b>Keyword rules generalise only partly (measured):</b> 98% on messages I tuned against vs <b>71-80% on fresh ones</b>, 0-4% wrong advice; unplaceable messages get a question, and many out-of-scope topics are "asked" not clearly "referred". Mitigations: the first reply names the detected problem and the user can correct it in one message ("wrong, it's a deposit problem"); amounts/dates can be corrected the same way; an optional LLM fallback (one-word, whitelisted output) is built but <b>untested against a live model</b>.</li>
+<li><b>Over-caution:</b> "threatened" fires the emergency screen and drops the deposit problem; one out-of-scope word ("harassment") refuses an otherwise in-scope salary claim.</li>
+<li><b>Hinglish</b> is understood but answered in English; <b>Tamil/Bengali/etc.</b> are declined unless an LLM is connected.</li>
+<li><b>Untested / unreviewed:</b> the live-LLM path (no API key), browser voice (mic), and lawyer review. Selected claims were checked against official India Code, Gazette and department sources. Consumer Commission limits use the value paid as consideration, not necessarily the refund due; state and transition rules may apply. Section 59 of the Industrial Relations Code covers only specified categories of money due to a worker, not every unpaid-salary claim.</li></ul></div>
+
+<h2>6. Scale and cost</h2>
+<ul><li><b>Cost:</b> offline mode makes 0 model calls (free). With an LLM, English costs 0 calls; Hindi/other-language adds at most 2 small calls per message (translate in, simplify out). I did not measure rupee cost; with a small model it should be a fraction of a rupee per conversation, to be confirmed.</li>
+<li><b>New input:</b> <code>python3 run_story.py story.txt</code> (or a folder) reads any story and writes a full report, so a whole batch can be processed with no chat.</li>
+<li><b>Adding a legal area</b> = 1 knowledge-base file section + a keyword list + a notice template + 4 roleplay objections + test cases. No retraining. Adding a state's rent act or labour office is a knowledge-base entry.</li>
+<li><b>Next steps:</b> lawyer-reviewed knowledge base; semantic classifier (LLM or embeddings) behind the same guard; regional languages; WhatsApp front-end; log (consented) failed conversations to find the next area to cover.</li></ul>
+
+<h2>7. AI tools used, and where they got it wrong</h2>
+<p>Built with AI coding assistance, with me setting scope and reviewing the outputs. <b>Where the AI got it wrong:</b> in testing, the parser read "80000 salary" as 80,000 years; I fixed the date parsing and added a regression check. An early legal draft cited two laws that had been replaced; I updated the knowledge base after checking current sources and recorded the verification limits. Finally, a fake-model probe invented an Act and case; the output guard blocked all 7 attack variants. These failures led to narrower grounded answers, regression tests and an explicit lawyer-review step.</p>
+</body></html>

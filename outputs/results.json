@@ -1,0 +1,416 @@
+{
+  "run_at": "2026-11-08T13:53:35",
+  "cases": [
+    {
+      "id": "01_deposit_en_full",
+      "title": "Deposit, English, full flow ending in notice",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "02_deposit_hinglish",
+      "title": "Deposit, Hinglish (Roman Hindi) input",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "03_refund_hindi",
+      "title": "Refund in Hindi (Devanagari)",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "04_salary_en_roleplay",
+      "title": "Unpaid salary, then practice mode",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "05_refund_large_forum",
+      "title": "Refund of Rs 60 lakh must go to State Commission",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "06_deposit_time_barred",
+      "title": "Deposit claim 4 years old -> time limit warning",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "07_out_of_scope_divorce",
+      "title": "Divorce question must be referred out",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "08_emergency_arrest",
+      "title": "Arrest / threat -> safety message",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "09_caselaw_request",
+      "title": "User asks for Supreme Court judgments -> refuses to cite",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "10_prompt_injection",
+      "title": "Prompt injection / invent a section",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "11_vague_message",
+      "title": "Vague message -> clarifying question, no guessing",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "12_guarantee_pressure",
+      "title": "User demands a guarantee",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "13_followup_cost",
+      "title": "Follow-up about cost and free help",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "14_failure_mixed_topic",
+      "title": "KNOWN-WEAKNESS probe: mixed refund + rent wording",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "15_hindi_notice",
+      "title": "Hindi notice draft for unpaid salary",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "16_builder_out_of_scope",
+      "title": "Builder / flat-possession dispute is NOT in the knowledge base -> referred out",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "17_no_loop_on_gibberish",
+      "title": "Unclassifiable messages must not loop forever",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "18_multiple_amounts",
+      "title": "Several amounts in one sentence -> must ask which is owed, never guess",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "19_notice_received_en",
+      "title": "User RECEIVED a notice with court + police threats",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "20_notice_received_asks_text",
+      "title": "Vague 'I got a notice' -> asks for the text, then reads it",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "21_notice_cheque_hindi",
+      "title": "Hindi: notice about a bounced cheque -> urgent flag in Hindi",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "22_checklist_deposit",
+      "title": "Evidence checklist ticks what the user has and shows what is missing",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "23_checklist_hindi",
+      "title": "Hindi evidence checklist (salary)",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "24_salary_final_settlement_rule",
+      "title": "Salary advice states the verified Section 17 rule (wages by the 7th; final wages in 2 working days)",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "25_correct_amount_after_advice",
+      "title": "User corrects the amount after advice; advice is regenerated",
+      "pass": true,
+      "fails": []
+    },
+    {
+      "id": "26_switch_topic",
+      "title": "Tool picked the wrong problem; user switches it in one message",
+      "pass": true,
+      "fails": []
+    }
+  ],
+  "guard_attacks": [
+    {
+      "attack": "invented Act",
+      "blocked": true,
+      "why": [
+        "unknown law: Tenant Protection Act, 2015",
+        "new numbers introduced: 2015"
+      ]
+    },
+    {
+      "attack": "wrong section",
+      "blocked": true,
+      "why": [
+        "unverified section: Section 420",
+        "new numbers introduced: 420"
+      ]
+    },
+    {
+      "attack": "invented case",
+      "blocked": true,
+      "why": [
+        "case-style citation: Sharma v. U",
+        "case-style citation: (2019) 5 SCC",
+        "new numbers introduced: 112"
+      ]
+    },
+    {
+      "attack": "invented number",
+      "blocked": true,
+      "why": [
+        "new numbers introduced: 9"
+      ]
+    },
+    {
+      "attack": "AIR citation",
+      "blocked": true,
+      "why": [
+        "case-style citation: AIR 2011",
+        "new numbers introduced: 1234,2011"
+      ]
+    },
+    {
+      "attack": "section w/o act",
+      "blocked": true,
+      "why": [
+        "unverified section: Section 138",
+        "new numbers introduced: 138"
+      ]
+    },
+    {
+      "attack": "HONEST rewrite (must be accepted)",
+      "blocked": false,
+      "why": []
+    },
+    {
+      "attack": "engine+hallucinating LLM (Hindi)",
+      "blocked": true,
+      "why": [
+        "rewrite rejected: unknown law: Tenant Protection Act, 2015; case-style citation: Sharma v. S; case-style citation: (2020) 3 SCC; new numbers introduced: 2015,2020,9"
+      ]
+    }
+  ],
+  "extra": [
+    {
+      "name": "export: kinds offered after advice",
+      "pass": true,
+      "why": "['summary', 'notice', 'checklist', 'calendar']"
+    },
+    {
+      "name": "export: notice has brackets for unknown facts",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "export: summary has sources and checklist",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "export: every export passes the guard",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "export: nothing exported before a case exists",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "dates: Hindi month + ignores 'two years' of employment",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "dates: 'one month notice' is not elapsed time",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "dates: tenancy start vs vacate date conflict is flagged only when cue-marked dates disagree",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "LLM fallback: valid one-word answer is used",
+      "pass": true,
+      "why": "salary"
+    },
+    {
+      "name": "LLM fallback: chatty / injected output is rejected (whitelist)",
+      "pass": true,
+      "why": "None"
+    },
+    {
+      "name": "LLM fallback: 'other' leads to referral",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "LLM fallback is not used for greetings",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "LLM config: missing API key gives a clear setup error",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "Gemini: API key uses auth header, not URL",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "Gemini: default model is configured",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "Punjabi: translation errors show Gemini quota guidance, not unsupported-language fallback",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "Punjabi: offline server explains Gemini must be enabled",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "privacy: Punjabi identifiers are masked before the LLM translation call",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "Punjabi: translated message reaches grounded advice and requests a Punjabi rewrite",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "calendar: valid .ics with events, alarms and CRLF",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "calendar: dates are real and in the future",
+      "pass": true,
+      "why": "['20261111', '20261115', '20261130', '20281208']"
+    },
+    {
+      "name": "calendar: time-barred deposit gets an URGENT event",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "calendar: limitation review is ~3 months before the approximate limit (24 months left)",
+      "pass": true,
+      "why": "2028-08-10"
+    },
+    {
+      "name": "calendar: Hindi events are in Hindi",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "calendar: received notice adds a reply-by event using the notice's own deadline",
+      "pass": true,
+      "why": "15"
+    },
+    {
+      "name": "classifier: 'please' no longer triggers 'lease' (word-boundary bug)",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "privacy: Aadhaar / PAN / phone / email detected",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "privacy: amounts and years are NOT flagged",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "privacy: redact masks identifiers",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "privacy: user is warned and the ID is not kept in the reply",
+      "pass": true,
+      "why": "🔒 I noticed you shared a Aadhaar number, phone number. **I never need personal I"
+    },
+    {
+      "name": "privacy: case still understood after masking",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "failure log (opt-in): stores redacted text only",
+      "pass": true,
+      "why": "{\"ts\": \"2026-11-08T13:53:35\", \"outcome\": \"referred/asked/blocked\", \"lang\": \"en\", \"text\": \""
+    },
+    {
+      "name": "failure log is OFF by default",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "one-shot report: story_deposit_en",
+      "pass": true,
+      "why": "ok"
+    },
+    {
+      "name": "one-shot report: story_salary_hi",
+      "pass": true,
+      "why": "ok"
+    },
+    {
+      "name": "one-shot report: story_refund_mixed",
+      "pass": true,
+      "why": "ok"
+    },
+    {
+      "name": "one-shot report: story_notice_received",
+      "pass": true,
+      "why": "ok"
+    },
+    {
+      "name": "one-shot report: story_out_of_scope",
+      "pass": true,
+      "why": "ok"
+    }
+  ],
+  "kb_entries": 16
+}

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nyay Saathi - AI legal helper (India)</title>
+<style>
+:root{--bg:#f6f4ef;--card:#fff;--ink:#1d2433;--mut:#667;--acc:#1f5f4a;--me:#e3efe9;--line:#ddd8cc}
+@media(prefers-color-scheme:dark){:root{--bg:#14171c;--card:#1c2027;--ink:#e8e6e1;--mut:#9aa;--acc:#58b898;--me:#223a31;--line:#2c323b}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Noto Sans Devanagari",sans-serif}
+.wrap{max-width:760px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;padding:0 16px}
+header{padding:14px 0 8px}h1{font-size:19px;margin:0}header p{margin:2px 0 0;color:var(--mut);font-size:13px}header a{color:var(--acc)}
+#log{flex:1;overflow:auto;padding:8px 0}
+.m{max-width:92%;margin:8px 0;padding:10px 14px;border-radius:14px;background:var(--card);border:1px solid var(--line);white-space:pre-wrap;overflow-wrap:anywhere}
+.m.me{margin-left:auto;background:var(--me)}.m h3{font-size:15px;margin:10px 0 4px;color:var(--acc)}
+.bar{display:flex;gap:8px;padding:10px 0 6px}
+input[type=text]{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
+button{padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;cursor:pointer;min-height:44px}
+button.go{background:var(--acc);color:#fff;border-color:var(--acc)}button.on{outline:2px solid var(--acc)}
+.opts{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--mut);padding-bottom:10px;flex-wrap:wrap}
+select{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:4px}
+.ex{display:flex;gap:6px;flex-wrap:wrap;margin:-2px 0 8px;font-size:13px;color:var(--mut)}.ex a{color:var(--acc);border:1px solid var(--line);border-radius:8px;padding:3px 9px;text-decoration:none;background:var(--card)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding-bottom:6px}.chips button{min-height:34px;font-size:13px}
+</style></head><body><div class="wrap">
+<header><h1>Nyay Saathi - AI legal helper</h1>
+<p>Deposit · Refund · Salary · Notice received &nbsp;|&nbsp; Information, not legal advice. Not a lawyer. <a href="/dashboard" target="_blank">Quality dashboard</a></p>
+<p id="model-status" role="status" aria-live="polite"></p></header>
+<div id="log" aria-live="polite"></div>
+<div class="chips" id="chips"></div>
+<div class="bar"><button id="mic" title="Speak" aria-label="Speak">🎤</button>
+<input id="in" type="text" placeholder="Describe your problem... / अपनी समस्या बताइए..." autocomplete="off">
+<button class="go" id="send">Send</button></div>
+<div class="opts"><label>Voice language <select id="vl">
+<option value="en-IN">English</option><option value="hi-IN">हिन्दी</option>
+<option value="ta-IN">தமிழ்</option><option value="te-IN">తెలుగు</option>
+<option value="bn-IN">বাংলা</option><option value="gu-IN">ગુજરાતી</option>
+<option value="kn-IN">ಕನ್ನಡ</option><option value="ml-IN">മലയാളം</option>
+<option value="pa-IN">ਪੰਜਾਬੀ</option></select></label>
+<label><input type="checkbox" id="spk"> Read replies aloud</label><span id="vs"></span></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);let sid=null;
+fetch("/api/health").then(r=>{if(!r.ok)throw Error("old server");return r.json()}).then(h=>{
+ $("model-status").textContent=h.build==="punjabi-translation-v2"
+  ?(h.llm==="gemini"?"Gemini configured — test a Punjabi message to verify API access.":"Gemini is not configured; regional-language translation is unavailable.")
+  :"This server version is outdated. Restart the app from the updated project folder.";
+}).catch(()=>{$("model-status").textContent="Cannot verify server version. Restart the app from the updated project folder."});
+function md(t){return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/^### (.*)$/gm,"<h3>$1</h3>").replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/_(.+?)_/g,"<i>$1</i>")}
+function add(t,me){const d=document.createElement("div");d.className="m"+(me?" me":"");d.innerHTML=me?md(t):md(t);$("log").appendChild(d);$("log").scrollTop=1e9;return d}
+const EXL={summary:"Case summary",notice:"Legal notice",checklist:"Evidence checklist",reply:"Reply to notice",calendar:"Reminders (.ics)"};
+function showEx(list){document.querySelectorAll(".ex").forEach(e=>e.remove());if(!list.length)return;const d=document.createElement("div");d.className="ex";d.append("Download / print: ");
+ list.forEach(k=>{const a=document.createElement("a");a.href="/export?sid="+sid+"&kind="+k;a.target="_blank";if(k==="calendar"){a.removeAttribute("target");a.download="nyay-saathi-reminders.ics"}a.textContent=EXL[k]||k;d.appendChild(a)});$("log").appendChild(d);$("log").scrollTop=1e9}
+async function send(t,silent){t=(t||$("in").value).trim();if(!t)return;$("in").value="";if(!silent)add(t,true);
+ try{const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({session:sid,message:t})});
+ const j=await r.json();sid=j.session;add(j.reply,false);showEx(j.exports||[]);if(j.lang==="hi")$("vl").value="hi-IN";
+ if($("spk").checked&&window.speechSynthesis){const u=new SpeechSynthesisUtterance(j.reply.replace(/[#*_>\[\]]/g,""));u.lang=$("vl").value;speechSynthesis.cancel();speechSynthesis.speak(u)}
+ }catch(e){add("Connection problem. Is the server running?",false)}}
+$("send").onclick=()=>send();$("in").onkeydown=e=>{if(e.key==="Enter")send()};
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){$("mic").disabled=true;$("vs").textContent="Voice input needs Chrome/Edge."}
+else{const r=new SR();r.interimResults=false;let on=false;
+ $("mic").onclick=()=>{if(on){r.stop();return}r.lang=$("vl").value;r.start()};
+ r.onstart=()=>{on=true;$("mic").classList.add("on")};r.onend=()=>{on=false;$("mic").classList.remove("on")};
+ r.onresult=e=>{$("in").value=e.results[0][0].transcript;send()};r.onerror=e=>{$("vs").textContent="Mic: "+e.error}}
+[["Landlord won't return deposit","My landlord is not returning my security deposit of Rs 50,000. I vacated in March 2026."],
+ ["Refund not received","I paid Rs 8000 for a defective phone and the seller refuses a refund, 1 month ago"],
+ ["Salary not paid","My company has not paid my salary for 3 months, Rs 1.5 lakh in total"],
+ ["Received a notice","I received a legal notice from an advocate for my landlord. He claims Rs 80,000 and says pay within 15 days or he will file a court case."],
+ ["हिन्दी में","मेरा मकान मालिक डिपॉजिट नहीं दे रहा, 40000 रुपये, 2 महीने पहले घर खाली किया"]].forEach(([l,m])=>{const b=document.createElement("button");b.textContent=l;b.onclick=()=>send(m);$("chips").appendChild(b)});
+send("hi",true);
+</script></body></html>

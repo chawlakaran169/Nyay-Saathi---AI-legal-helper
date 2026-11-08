@@ -1,0 +1,627 @@
+{
+  "dev_first_run": {
+    "n": 42,
+    "correct": 35,
+    "safe_abstain": 5,
+    "wrong": 2,
+    "strict_accuracy": 0.833,
+    "wrong_rate": 0.048,
+    "note": "first run on the dev set, before any vocabulary fix (recorded as it happened)"
+  },
+  "dev_after_tuning": {
+    "n": 42,
+    "correct": 41,
+    "safe_abstain": 1,
+    "wrong": 0,
+    "strict_accuracy": 0.976,
+    "wrong_rate": 0.0,
+    "rows": [
+      {
+        "message": "landlord not returning my deposit of 30000",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "I vacated my PG last month and the owner is refusing to return my advance",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "मकान मालिक ने सिक्योरिटी डिपॉजिट वापस नहीं किया",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "mera makan malik security deposit nahi de raha",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my flatmate and I left the flat and the broker says deposit is forfeited",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "owner deducted 20000 from my rent deposit for no reason",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "I paid 2 months rent as caution money, house owner not giving back",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "kiraya agreement khatam hua, malik paisa wapas nahi kar raha",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "tenant here, landlord says he will refund deposit after painting, 4 months passed",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "PG wale ne advance wapas nahi kiya",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "hostel warden is not returning my caution deposit",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "the shop owner I rented from won't return my security",
+        "label": "deposit",
+        "predicted": "ask",
+        "outcome": "SAFE"
+      },
+      {
+        "message": "Flipkart did not refund my money for the defective phone",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "I cancelled my flight ticket and the airline has not refunded",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "coaching institute is not refunding my fees after I left",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "रिफंड नहीं मिला, ऑर्डर कैंसिल किया था",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "paisa wapas nahi mil raha, seller ne kharab saman bheja",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "bought a washing machine that stopped working in a week, company refuses to replace",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "online course seller is not giving my money back",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "Swiggy charged me twice and refused to refund",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "hotel booking cancelled by them but no refund",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my gym membership fee refund is pending",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "ordered a laptop with a broken screen from Amazon, they won't give refund",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "company has not paid my salary for 3 months",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my employer is not giving my full and final settlement after I resigned",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "तनख्वाह नहीं मिली दो महीने से",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "salary nahi mil rahi, HR reply nahi kar raha",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "I was terminated and they are withholding my last month pay",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "contractor hasn't paid my wages for the work I did",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "boss deducted half my salary without telling me",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "offer letter said 40k but they paid 30k",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my internship stipend was not paid",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "company is not releasing my experience letter and last salary",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "I want a divorce",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my neighbour is encroaching my land",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "police filed FIR against me",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "how to register a trademark for my brand",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "someone hacked my instagram and is blackmailing me",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my father died, how to get the will executed",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "I got into a road accident, who pays",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "insurance company rejected my health claim wrongly",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "income tax notice for my 2022 return",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      }
+    ]
+  },
+  "holdout": {
+    "n": 24,
+    "correct": 17,
+    "safe_abstain": 6,
+    "wrong": 1,
+    "strict_accuracy": 0.708,
+    "wrong_rate": 0.042,
+    "rows": [
+      {
+        "message": "I left my rented room in Bangalore in July and the owner is sitting on my 45000",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "ghar khali kar diya par malik ne ek paisa wapas nahi diya",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "मैंने फ्लैट छोड़ दिया लेकिन मकान मालिक डिपॉजिट के पैसे नहीं दे रहा",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my lease ended, they say deposit adjusted against some repairs but never showed bills",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "the guesthouse I stayed in for 6 months refuses to return my refundable security amount",
+        "label": "deposit",
+        "predicted": "refund",
+        "outcome": "WRONG"
+      },
+      {
+        "message": "I returned a damaged speaker within 7 days but the website never credited my money",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "travel agency took 80000 for a Goa package and then cancelled, no money back",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "मैंने मोबाइल खरीदा था जो खराब निकला, दुकानदार पैसे वापस नहीं कर रहा",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "online tutoring app deducted money twice from my card and support is ignoring me",
+        "label": "refund",
+        "predicted": "ask",
+        "outcome": "SAFE"
+      },
+      {
+        "message": "sofa delivered with a broken leg and the furniture store says no returns",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "bhai order cancel kiya tha 15 din ho gaye refund ka koi pata nahi",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my last 2 months pay is stuck after I quit the startup",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "employer says they will pay my dues next month, been saying that since March",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "मेरी पिछले तीन महीने की सैलरी कंपनी ने रोक रखी है",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "they cut my pay by 10000 every month and won't explain",
+        "label": "salary",
+        "predicted": "ask",
+        "outcome": "SAFE"
+      },
+      {
+        "message": "I am a freelancer and the client hasn't paid my invoice of 25000",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "HR is delaying my full and final since I resigned in September",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my wife and I are fighting about who gets the car after separation",
+        "label": "oos",
+        "predicted": "ask",
+        "outcome": "SAFE"
+      },
+      {
+        "message": "a man cheated me on a bike sale and I want him arrested",
+        "label": "oos",
+        "predicted": "emergency",
+        "outcome": "SAFE"
+      },
+      {
+        "message": "my business partner forged my signature, what to do",
+        "label": "oos",
+        "predicted": "ask",
+        "outcome": "SAFE"
+      },
+      {
+        "message": "builder has not given possession of my flat for 3 years",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my bank is harassing me for EMI recovery",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "how do I file a patent for my invention",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "school is not giving my child's transfer certificate",
+        "label": "oos",
+        "predicted": "ask",
+        "outcome": "SAFE"
+      }
+    ]
+  },
+  "holdout2": {
+    "n": 30,
+    "correct": 24,
+    "safe_abstain": 6,
+    "wrong": 0,
+    "strict_accuracy": 0.8,
+    "wrong_rate": 0.0,
+    "rows": [
+      {
+        "message": "my landlord in Pune is sitting on 55000 of mine since I moved out in September",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "flat chhodh diya but owner deposit ka paisa lautane se mana kar raha hai",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "किराए का कमरा खाली किए 5 महीने हो गए, मालिक सिक्योरिटी नहीं लौटा रहा",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "the PG I stayed at says my caution money is gone because of 'maintenance' with no receipt",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my tenancy ended in June and the landlord keeps making excuses about returning the security amount",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "I gave 1 lakh advance to the house owner and he refuses to give it back after I cancelled the lease",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "owner ne rent agreement ke baad jo deposit liya tha wo wapas nahi kar raha",
+        "label": "deposit",
+        "predicted": "deposit",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "the e-commerce site cancelled my order but only refunded half the amount",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "I paid 12000 for a yoga retreat that was cancelled, the organiser won't give money back",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "ऑनलाइन ख़रीदी घड़ी नकली निकली, कंपनी रिफंड देने से मना कर रही है",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "phone screen cracked on day two, service centre says no replacement or return",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "bank se nahi, dukan se liya tha fridge, kharab hai, dukandar paise nahi lauta raha",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "airline cancelled my flight and has not returned my ticket money in 3 months",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "the coaching centre closed down after I paid the full year fee",
+        "label": "refund",
+        "predicted": "refund",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my former manager says my last salary will be released 'after clearance' but 2 months have passed",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "employer is not paying my wages and says business is slow",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "मुझे इस महीने की तनख्वाह नहीं मिली और कंपनी जवाब नहीं दे रही",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "they deducted notice period pay from my final settlement even though I served it",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my bonus and last month salary are pending since I left the job in August",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "salary slip aa gayi par paisa account mein nahi aaya, 3 mahine se",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "I am a delivery partner and the company hasn't paid my weekly earnings",
+        "label": "salary",
+        "predicted": "salary",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "my sister is being harassed for dowry what do we do",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "I want to challenge a traffic challan",
+        "label": "oos",
+        "predicted": "ask",
+        "outcome": "SAFE"
+      },
+      {
+        "message": "someone is occupying my father's house and refuses to leave",
+        "label": "oos",
+        "predicted": "ask",
+        "outcome": "SAFE"
+      },
+      {
+        "message": "my startup co-founder is leaving, how to split equity",
+        "label": "oos",
+        "predicted": "ask",
+        "outcome": "SAFE"
+      },
+      {
+        "message": "I need a lawyer for my bail",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "how to get a copyright for my song",
+        "label": "oos",
+        "predicted": "ask",
+        "outcome": "SAFE"
+      },
+      {
+        "message": "my car insurer refuses to pay for accident damage",
+        "label": "oos",
+        "predicted": "refer",
+        "outcome": "CORRECT"
+      },
+      {
+        "message": "आधार कार्ड में नाम सुधारना है",
+        "label": "oos",
+        "predicted": "ask",
+        "outcome": "SAFE"
+      },
+      {
+        "message": "mera padosi roz noise karta hai, kya kar sakta hu",
+        "label": "oos",
+        "predicted": "ask",
+        "outcome": "SAFE"
+      }
+    ]
+  },
+  "holdout2_baseline": {
+    "n": 30,
+    "correct": 22,
+    "safe_abstain": 8,
+    "wrong": 0,
+    "strict_accuracy": 0.733,
+    "wrong_rate": 0.0,
+    "note": "old keyword rules, measured on the frozen set before the classifier upgrade"
+  },
+  "note": "dev_after_tuning is optimistic (rules were tuned on it); holdout was written after tuning and never used to change rules."
+}
