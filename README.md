@@ -9,7 +9,7 @@ security deposit not returned, consumer refund, unpaid salary. Everything else i
 ```bash
 python3 server.py          # open http://localhost:8000  (mic + read-aloud work in Chrome/Edge)
 python3 cli.py             # or chat in the terminal
-python3 tests/run_tests.py # 26 scripted cases + 38 extra checks + guard attacks + classifier eval + EN/HI parity + speed -> outputs/ (+ outputs/dashboard.html)
+python3 tests/run_tests.py # 26 scripted cases + 45 extra checks + guard attacks + classifier eval + EN/HI parity + speed -> outputs/ (+ outputs/dashboard.html)
 python3 tests/eval_classifier.py # labeled problem-type evaluation (dev + held-out) -> outputs/classifier_eval.json
 python3 run_story.py samples/   # NEW INPUT: any story .txt (or folder) -> full report in outputs/reports/
 python3 tests/probes.py    # unscripted probes -> outputs/probes.md
@@ -68,7 +68,7 @@ The LLM does only limited language tasks and topic fallback. Rewritten output mu
 `kb/` knowledge base · `lawyer/` engine, guard, notice, roleplay, LLM adapter · `web/` chat UI · `tests/` cases + probes · `outputs/` raw results · `doc/` solution doc + video script
 
 ## Measured quality (see outputs/dashboard.html)
-- 26 scripted conversations and 38 extra checks pass; 7/7 hallucination attacks blocked
+- 26 scripted conversations and 45 extra checks pass; 7/7 hallucination attacks blocked
 - Problem-type detection: first run 83% (2 wrong); 98% after tuning on that set (optimistic). **Frozen set of 30 fresh messages: old rules 73% -> upgraded rules 80%, 0 wrong.** Earlier held-out set: 58% -> 71%, wrong advice 8% -> 4%. Rules still generalise only partly; unplaceable messages get a question, not a guess.
 - EN vs Hindi parity: 100% of 72 fields over 8 paired stories (first run 90%). Recent offline runs measured p95 between 1.6 and 2.7 ms per message.
 - Knowledge base checked 2026-11-08 against official sources where available (not a lawyer's review): two repealed-law references were found and corrected; e-Jagriti and the official filing/fee rules are now cited.
