@@ -8,20 +8,26 @@ from lawyer import llm as llm_mod
 SESSIONS = {}
 HERE = os.path.dirname(os.path.abspath(__file__))
 LLM_PROVIDER = "none"
-BUILD_ID = "punjabi-translation-v2"
+BUILD_ID = "localized-exports-v3"
 
 
-def printable(text, sid, kind):
+def printable(text, sid, kind, language):
+    labels = {
+        "Punjabi": ("ਛਾਪੋ / PDF ਵਜੋਂ ਸੰਭਾਲੋ", "ਟੈਕਸਟ ਫ਼ਾਈਲ ਡਾਊਨਲੋਡ ਕਰੋ", "ਨਿਆਂ ਸਾਥੀ"),
+        "Hindi": ("प्रिंट करें / PDF के रूप में सहेजें", "टेक्स्ट फ़ाइल डाउनलोड करें", "न्याय साथी"),
+        "English": ("Print / Save as PDF", "Download .txt", "Nyay Saathi"),
+    }
+    print_label, download_label, title = labels.get(language, labels["English"])
     body = html.escape(text)
     body = re.sub(r"^### (.*)$", r"<h3>\1</h3>", body, flags=re.M)
     body = re.sub(r"^# (.*)$", r"<h2>\1</h2>", body, flags=re.M)
     body = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", body)
-    return ("<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><title>Nyay Saathi: " + kind + "</title>"
-            "<style>body{font:15px/1.55 system-ui,'Noto Sans Devanagari',sans-serif;max-width:760px;margin:0 auto;padding:16px;color:#1d2433;background:#fff}"
+    return ("<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><title>" + title + "</title>"
+            "<style>body{font:15px/1.55 system-ui,'Noto Sans Gurmukhi','Noto Sans Devanagari',sans-serif;max-width:760px;margin:0 auto;padding:16px;color:#1d2433;background:#fff}"
             "div.t{white-space:pre-wrap}h2,h3{color:#1f5f4a}.bar{display:flex;gap:10px;margin-bottom:12px}"
             "a,button{padding:8px 12px;border:1px solid #bbb;border-radius:8px;background:#fff;color:#1d2433;text-decoration:none;font:inherit;cursor:pointer}"
             "@media print{.bar{display:none}}</style>"
-            f"<div class=bar><button onclick='window.print()'>Print / Save as PDF</button><a href='/export?sid={sid}&kind={kind}&fmt=txt'>Download .txt</a></div>"
+            f"<div class=bar><button onclick='window.print()'>{html.escape(print_label)}</button><a href='/export?sid={sid}&kind={kind}&fmt=txt'>{html.escape(download_label)}</a></div>"
             f"<div class=t>{body}</div>")
 
 
@@ -45,18 +51,20 @@ class H(BaseHTTPRequestHandler):
             s = SESSIONS.get((q.get("sid") or [""])[0])
             kind = (q.get("kind") or ["summary"])[0]
             text = s.export(kind) if s else "Session not found."
-            if kind == "calendar" and s:
+            if kind == "calendar" and s and text.startswith("BEGIN:VCALENDAR"):
                 data = text.encode("utf-8")
                 self.send_response(200); self.send_header("Content-Type", "text/calendar; charset=utf-8")
                 self.send_header("Content-Disposition", 'attachment; filename="nyay-saathi-reminders.ics"')
                 self.send_header("Content-Length", str(len(data))); self.end_headers(); self.wfile.write(data)
+            elif kind == "calendar":
+                self._send(503, text, "text/plain")
             elif (q.get("fmt") or [""])[0] == "txt":
                 data = text.replace("**", "").replace("### ", "").replace("# ", "").encode("utf-8")
                 self.send_response(200); self.send_header("Content-Type", "text/plain; charset=utf-8")
                 self.send_header("Content-Disposition", f'attachment; filename="nyay-saathi-{kind}.txt"')
                 self.send_header("Content-Length", str(len(data))); self.end_headers(); self.wfile.write(data)
             else:
-                self._send(200, printable(text, (q.get("sid") or [""])[0], kind), "text/html")
+                self._send(200, printable(text, (q.get("sid") or [""])[0], kind, s.output_language if s else "English"), "text/html")
         else:
             self._send(404, "{}")
 
@@ -69,7 +77,7 @@ class H(BaseHTTPRequestHandler):
         s = SESSIONS.setdefault(sid, Session())
         msg = (body.get("message") or "").strip()[:4000]
         reply = s.say(msg) if msg else ""
-        self._send(200, json.dumps({"session": sid, "reply": reply, "lang": s.lang, "violations": s.meta["violations"], "exports": s.exports_available()}))
+        self._send(200, json.dumps({"session": sid, "reply": reply, "lang": s.output_language, "violations": s.meta["violations"], "exports": s.exports_available()}))
 
     def log_message(self, *a):
         pass

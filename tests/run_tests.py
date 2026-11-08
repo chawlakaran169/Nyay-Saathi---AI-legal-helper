@@ -137,24 +137,57 @@ def extra_checks():
                 return ("My landlord is not returning my security deposit of Rs 40,000. "
                         "I vacated in March 2026. I have the rental agreement and bank transfer receipt. "
                         "I asked in writing.")
-            return user
+            if "JSON array" in system:
+                values = json.loads(user)
+                return json.dumps([[f"ਪੰਜਾਬੀ {title}", f"ਪੰਜਾਬੀ {note}"] for title, note in values], ensure_ascii=False)
+            return "ਪੰਜਾਬੀ: " + user
     punjabi = "ਮੇਰਾ ਮਕਾਨ ਮਾਲਕ ਡਿਪਾਜ਼ਿਟ ਵਾਪਸ ਨਹੀਂ ਕਰ ਰਿਹਾ, ਫ਼ੋਨ 9876543210"
     translation_fake = TranslationFake(fail=True)
     translated_error = Session(llm=translation_fake).say(punjabi)
     chk("Punjabi: translation errors show Gemini quota guidance, not unsupported-language fallback",
-        "quota or rate limit" in translated_error and "currently chat in English and Hindi" not in translated_error)
+        "ਵਰਤੋਂ ਦੀ ਹੱਦ" in translated_error and "currently chat in English and Hindi" not in translated_error)
+    chk("Hindi: Gemini quota failures are explained in Hindi",
+        "API उपयोग सीमा" in __import__("lawyer.engine", fromlist=["_translation_failure"])._translation_failure(
+            llm_mod.LLMError("HTTP 429"), "Hindi", []))
     no_llm_punjabi = Session(llm=None).say(punjabi)
     chk("Punjabi: offline server explains Gemini must be enabled",
-        "Punjabi translation needs Gemini enabled" in no_llm_punjabi and "/api/health" in no_llm_punjabi)
+        "ਪੰਜਾਬੀ ਅਨੁਵਾਦ ਲਈ Gemini ਚਾਲੂ ਕਰੋ" in no_llm_punjabi and "/api/health" in no_llm_punjabi)
     chk("privacy: Punjabi identifiers are masked before the LLM translation call",
         len(translation_fake.calls) == 1 and "9876543210" not in translation_fake.calls[0][1]
         and "PHONE NUMBER REMOVED" in translation_fake.calls[0][1])
     translation_fake = TranslationFake()
-    translated_reply = Session(llm=translation_fake).say(
+    translated_session = Session(llm=translation_fake)
+    translated_reply = translated_session.say(
         "ਮੇਰਾ ਮਕਾਨ ਮਾਲਕ ₹40,000 ਦਾ ਸਿਕਿਉਰਿਟੀ ਡਿਪਾਜ਼ਿਟ ਵਾਪਸ ਨਹੀਂ ਕਰ ਰਿਹਾ। ਮੈਂ ਮਾਰਚ 2026 ਵਿੱਚ ਘਰ ਖਾਲੀ ਕੀਤਾ ਸੀ ਅਤੇ ਮੇਰੇ ਕੋਲ ਕਿਰਾਏ ਦਾ ਸਮਝੌਤਾ ਤੇ ਬੈਂਕ ਟ੍ਰਾਂਸਫਰ ਦੀ ਰਸੀਦ ਹੈ।")
     chk("Punjabi: translated message reaches grounded advice and requests a Punjabi rewrite",
         len(translation_fake.calls) == 2 and "Punjabi" in translation_fake.calls[1][0]
-        and "currently chat in English and Hindi" not in translated_reply)
+        and "ਪੰਜਾਬੀ:" in translated_reply and translated_session.output_language == "Punjabi")
+    translated_notice = translated_session.export("notice")
+    chk("Punjabi: exported notice is rewritten in Punjabi",
+        "ਪੰਜਾਬੀ:" in translated_notice and "YOUR FULL NAME" in translated_notice)
+    translated_calendar = translated_session.export("calendar")
+    chk("Punjabi: calendar export translates event text and keeps iCalendar structure",
+        translated_calendar.startswith("BEGIN:VCALENDAR") and "SUMMARY:ਪੰਜਾਬੀ" in translated_calendar
+        and "DESCRIPTION:ਪੰਜਾਬੀ" in translated_calendar and "DESCRIPTION:ਯਾਦ ਦਿਹਾਨੀ" in translated_calendar)
+    from server import printable
+    punjabi_print = printable("ਪੰਜਾਬੀ ਸਮੱਗਰੀ", "test", "summary", "Punjabi")
+    chk("Punjabi: print/export page controls are Punjabi",
+        "ਛਾਪੋ / PDF ਵਜੋਂ ਸੰਭਾਲੋ" in punjabi_print and "ਟੈਕਸਟ ਫ਼ਾਈਲ ਡਾਊਨਲੋਡ ਕਰੋ" in punjabi_print)
+    translated_session.say("yes")
+    chk("Punjabi: short English answers keep the conversation language",
+        translated_session.output_language == "Punjabi")
+    translated_session.say("Please answer all the next questions in English")
+    chk("Punjabi: a clear English language switch changes the conversation language",
+        translated_session.output_language == "English")
+    class HindiNumberRewriteFake:
+        def complete(self, system, user):
+            markers = __import__("re").findall(r"\[\[NSNUM[A-Z]+\]\]", user)
+            return "हिंदी में जवाब। " + " ".join(markers)
+    hindi_rewrite = Session(llm=HindiNumberRewriteFake())
+    hindi_reply = hindi_rewrite.say(
+        "मेरा मकान मालिक मेरी 40,000 रुपये की सुरक्षा जमा राशि वापस नहीं कर रहा। मैंने दो महीने पहले घर खाली किया।")
+    chk("Hindi: translated reply preserves protected numbers and remains in Hindi",
+        "हिंदी में जवाब" in hindi_reply and "4" in hindi_reply and "rewrite accepted" == hindi_rewrite.meta["llm"])
     from lawyer import privacy, reminders
     ics = s.export("calendar")
     chk("calendar: valid .ics with events, alarms and CRLF", ics.startswith("BEGIN:VCALENDAR") and ics.count("BEGIN:VEVENT") >= 4 and "BEGIN:VALARM" in ics and "\r\n" in ics and ics.strip().endswith("END:VCALENDAR"))

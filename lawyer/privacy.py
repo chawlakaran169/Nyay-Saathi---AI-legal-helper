@@ -37,6 +37,8 @@ KIND_HI = {"Aadhaar number": "आधार नंबर", "PAN": "PAN", "phone n
 
 
 def warning(kinds, lang):
+    if lang == "Punjabi":
+        return "🔒 ਤੁਹਾਡਾ ਨਿੱਜੀ ਵੇਰਵਾ ਪਛਾਣਿਆ ਗਿਆ ਹੈ। ਮਦਦ ਲਈ ਸਾਨੂੰ ਤੁਹਾਡਾ ਨਿੱਜੀ ਨੰਬਰ ਨਹੀਂ ਚਾਹੀਦਾ; ਇਸਨੂੰ ਜਵਾਬ ਅਤੇ ਸੁਰੱਖਿਅਤ ਕੀਤੀ ਸਮੱਗਰੀ ਵਿੱਚੋਂ ਹਟਾਇਆ ਗਿਆ ਹੈ।"
     names = ", ".join(KIND_HI.get(k, k) for k in kinds) if lang == "hi" else ", ".join(kinds)
     return WARN["hi" if lang == "hi" else "en"].format(kinds=names)
 

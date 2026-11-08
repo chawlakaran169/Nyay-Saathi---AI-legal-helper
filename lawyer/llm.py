@@ -20,9 +20,9 @@ class LLMError(RuntimeError):
 
 REWRITE_SYSTEM = (
     "You rewrite a legal information message for an ordinary person in India. "
-    "Rules: write in {lang}; use short plain sentences; keep every fact, number, helpline and "
+    "Rules: write in {lang}; use short plain sentences; keep every fact, digit, number, helpline and "
     "bullet from the source; DO NOT add any law, Act, Section number, case, court name, deadline "
-    "or number that is not in the source; do not give new advice; keep Act names exactly as written. "
+    "or number that is not in the source; preserve all digits exactly; do not give new advice; keep Act names exactly as written. "
     "Output only the rewritten message.")
 TRANSLATE_SYSTEM = "Translate the user's message to English. Output only the translation."
 

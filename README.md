@@ -52,9 +52,9 @@ try {
     [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($keyPtr)
 }
 ```
-Stop the app with Ctrl+C. Port 8001 avoids accidentally connecting to an older server already using port 8000. Open http://localhost:8001 and check http://localhost:8001/api/health; the response should include `"build":"punjabi-translation-v2"` and `"llm":"gemini"`. The key is prompted without echo and is not saved in the project; the app needs it in its process environment while running. The default model is `gemini-3.6-flash`; override with `$env:LAWYER_MODEL` if needed. The key must have access to the Gemini API, and provider quotas, eligibility, and billing depend on the account and Google's current terms.
+Stop the app with Ctrl+C. Port 8001 avoids accidentally connecting to an older server already using port 8000. Open http://localhost:8001 and check http://localhost:8001/api/health; the response should include `"build":"localized-exports-v3"` and `"llm":"gemini"`. The key is prompted without echo and is not saved in the project; the app needs it in its process environment while running. The default model is `gemini-3.6-flash`; override with `$env:LAWYER_MODEL` if needed. The key must have access to the Gemini API, and provider quotas, eligibility, and billing depend on the account and Google's current terms.
 
-When enabled, supported non-English scripts may be sent to Google for translation, and grounded answers may be sent for language simplification. Redact personal information before sending; the app masks identifiers it recognizes, but no automated detector catches every sensitive detail. English messages and legal content generation remain local. The LLM is not a lawyer and does not decide the legal advice.
+When enabled, supported non-English scripts may be sent to Google for translation, and grounded answers, notices, summaries, checklists, and calendar event text are rewritten in the language of the latest message. The interface and print/download controls switch to Punjabi or Hindi as appropriate. Redact personal information before sending; the app masks identifiers it recognizes, but no automated detector catches every sensitive detail. English legal content generation remains local. The LLM is not a lawyer and does not decide the legal advice.
 
 ## Other optional LLM providers
 ```bash

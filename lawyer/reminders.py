@@ -50,14 +50,14 @@ def _esc(t):
     return t.replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n")
 
 
-def ics(evs):
+def ics(evs, alarm="Reminder"):
     stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Nyay Saathi//Reminders//EN", "CALSCALE:GREGORIAN"]
     for d, title, note in evs:
         L += ["BEGIN:VEVENT", f"UID:{uuid.uuid4()}@nyay-saathi", f"DTSTAMP:{stamp}", f"DTSTART;VALUE=DATE:{d.strftime('%Y%m%d')}",
               f"DTEND;VALUE=DATE:{(d + datetime.timedelta(days=1)).strftime('%Y%m%d')}", f"SUMMARY:{_esc(title)}",
               f"DESCRIPTION:{_esc(note + ' (Approximate dates, general information, not legal advice.)')}",
-              "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:Reminder", "TRIGGER:-P1D", "END:VALARM", "END:VEVENT"]
+              "BEGIN:VALARM", "ACTION:DISPLAY", f"DESCRIPTION:{_esc(alarm)}", "TRIGGER:-P1D", "END:VALARM", "END:VEVENT"]
     L.append("END:VCALENDAR")
     return "\r\n".join(L) + "\r\n"
 

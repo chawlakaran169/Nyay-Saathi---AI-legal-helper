@@ -4,7 +4,7 @@
 <style>
 :root{--bg:#f6f4ef;--card:#fff;--ink:#1d2433;--mut:#667;--acc:#1f5f4a;--me:#e3efe9;--line:#ddd8cc}
 @media(prefers-color-scheme:dark){:root{--bg:#14171c;--card:#1c2027;--ink:#e8e6e1;--mut:#9aa;--acc:#58b898;--me:#223a31;--line:#2c323b}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Noto Sans Devanagari",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Noto Sans Gurmukhi","Noto Sans Devanagari",sans-serif}
 .wrap{max-width:760px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;padding:0 16px}
 header{padding:14px 0 8px}h1{font-size:19px;margin:0}header p{margin:2px 0 0;color:var(--mut);font-size:13px}header a{color:var(--acc)}
 #log{flex:1;overflow:auto;padding:8px 0}
@@ -19,50 +19,61 @@ select{background:var(--card);color:var(--ink);border:1px solid var(--line);bord
 .ex{display:flex;gap:6px;flex-wrap:wrap;margin:-2px 0 8px;font-size:13px;color:var(--mut)}.ex a{color:var(--acc);border:1px solid var(--line);border-radius:8px;padding:3px 9px;text-decoration:none;background:var(--card)}
 .chips{display:flex;gap:6px;flex-wrap:wrap;padding-bottom:6px}.chips button{min-height:34px;font-size:13px}
 </style></head><body><div class="wrap">
-<header><h1>Nyay Saathi - AI legal helper</h1>
-<p>Deposit · Refund · Salary · Notice received &nbsp;|&nbsp; Information, not legal advice. Not a lawyer. <a href="/dashboard" target="_blank">Quality dashboard</a></p>
+<header><h1 id="app-title">Nyay Saathi - AI legal helper</h1>
+<p><span id="app-description">Deposit · Refund · Salary · Notice received &nbsp;|&nbsp; Information, not legal advice. Not a lawyer.</span> <a id="dashboard-link" href="/dashboard" target="_blank">Quality dashboard</a></p>
 <p id="model-status" role="status" aria-live="polite"></p></header>
 <div id="log" aria-live="polite"></div>
 <div class="chips" id="chips"></div>
 <div class="bar"><button id="mic" title="Speak" aria-label="Speak">🎤</button>
 <input id="in" type="text" placeholder="Describe your problem... / अपनी समस्या बताइए..." autocomplete="off">
 <button class="go" id="send">Send</button></div>
-<div class="opts"><label>Voice language <select id="vl">
+<div class="opts"><label><span id="voice-label">Voice language</span> <select id="vl">
 <option value="en-IN">English</option><option value="hi-IN">हिन्दी</option>
 <option value="ta-IN">தமிழ்</option><option value="te-IN">తెలుగు</option>
 <option value="bn-IN">বাংলা</option><option value="gu-IN">ગુજરાતી</option>
 <option value="kn-IN">ಕನ್ನಡ</option><option value="ml-IN">മലയാളം</option>
 <option value="pa-IN">ਪੰਜਾਬੀ</option></select></label>
-<label><input type="checkbox" id="spk"> Read replies aloud</label><span id="vs"></span></div>
+<label><input type="checkbox" id="spk"> <span id="read-label">Read replies aloud</span></label><span id="vs"></span></div>
 </div>
 <script>
 const $=id=>document.getElementById(id);let sid=null;
 fetch("/api/health").then(r=>{if(!r.ok)throw Error("old server");return r.json()}).then(h=>{
- $("model-status").textContent=h.build==="punjabi-translation-v2"
-  ?(h.llm==="gemini"?"Gemini configured — test a Punjabi message to verify API access.":"Gemini is not configured; regional-language translation is unavailable.")
-  :"This server version is outdated. Restart the app from the updated project folder.";
-}).catch(()=>{$("model-status").textContent="Cannot verify server version. Restart the app from the updated project folder."});
+ serverBuildCurrent=h.build==="localized-exports-v3";geminiEnabled=h.llm==="gemini";updateStatus();
+}).catch(()=>{serverBuildCurrent=false;updateStatus()});
 function md(t){return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/^### (.*)$/gm,"<h3>$1</h3>").replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/_(.+?)_/g,"<i>$1</i>")}
 function add(t,me){const d=document.createElement("div");d.className="m"+(me?" me":"");d.innerHTML=me?md(t):md(t);$("log").appendChild(d);$("log").scrollTop=1e9;return d}
-const EXL={summary:"Case summary",notice:"Legal notice",checklist:"Evidence checklist",reply:"Reply to notice",calendar:"Reminders (.ics)"};
-function showEx(list){document.querySelectorAll(".ex").forEach(e=>e.remove());if(!list.length)return;const d=document.createElement("div");d.className="ex";d.append("Download / print: ");
- list.forEach(k=>{const a=document.createElement("a");a.href="/export?sid="+sid+"&kind="+k;a.target="_blank";if(k==="calendar"){a.removeAttribute("target");a.download="nyay-saathi-reminders.ics"}a.textContent=EXL[k]||k;d.appendChild(a)});$("log").appendChild(d);$("log").scrollTop=1e9}
+const LOCALES={
+ English:{title:"Nyay Saathi - AI legal helper",description:"Deposit · Refund · Salary · Notice received | Information, not legal advice. Not a lawyer.",dashboard:"Quality dashboard",placeholder:"Describe your problem...",send:"Send",voice:"Voice language",read:"Read replies aloud",download:"Download / print:",exports:{summary:"Case summary",notice:"Legal notice",checklist:"Evidence checklist",reply:"Reply to notice",calendar:"Reminders (.ics)"},statusGemini:"Gemini configured. Regional-language replies and exports use Gemini.",statusOffline:"Gemini is not configured; regional-language translation is unavailable.",oldServer:"This server version is outdated. Restart the app from the updated project folder.",connection:"Connection problem. Is the server running?",chips:[["Landlord won't return deposit","My landlord is not returning my security deposit of Rs 50,000. I vacated in March 2026."],["Refund not received","I paid Rs 8000 for a defective phone and the seller refuses a refund, 1 month ago"],["Salary not paid","My company has not paid my salary for 3 months, Rs 1.5 lakh in total"],["Received a notice","I received a legal notice from an advocate for my landlord. He claims Rs 80,000 and says pay within 15 days or he will file a court case."]]},
+ Punjabi:{title:"ਨਿਆਂ ਸਾਥੀ - ਕਾਨੂੰਨੀ ਜਾਣਕਾਰੀ ਸਹਾਇਕ",description:"ਕਿਰਾਇਆ ਜਮ੍ਹਾਂ ਰਕਮ · ਰਿਫੰਡ · ਤਨਖ਼ਾਹ · ਮਿਲਿਆ ਕਾਨੂੰਨੀ ਨੋਟਿਸ | ਇਹ ਕਾਨੂੰਨੀ ਜਾਣਕਾਰੀ ਹੈ, ਕਾਨੂੰਨੀ ਸਲਾਹ ਨਹੀਂ।",dashboard:"ਗੁਣਵੱਤਾ ਡੈਸ਼ਬੋਰਡ",placeholder:"ਆਪਣੀ ਸਮੱਸਿਆ ਦੱਸੋ...",send:"ਭੇਜੋ",voice:"ਬੋਲਣ ਦੀ ਭਾਸ਼ਾ",read:"ਜਵਾਬ ਉੱਚੀ ਆਵਾਜ਼ ਵਿੱਚ ਸੁਣੋ",download:"ਡਾਊਨਲੋਡ / ਛਾਪੋ:",exports:{summary:"ਕੇਸ ਦਾ ਸਾਰ",notice:"ਕਾਨੂੰਨੀ ਨੋਟਿਸ",checklist:"ਸਬੂਤਾਂ ਦੀ ਸੂਚੀ",reply:"ਨੋਟਿਸ ਦਾ ਜਵਾਬ",calendar:"ਯਾਦ-ਦਿਹਾਨੀਆਂ (.ics)"},statusGemini:"Gemini ਚਾਲੂ ਹੈ। ਹੋਰ ਭਾਸ਼ਾਵਾਂ ਦੇ ਜਵਾਬ ਅਤੇ ਦਸਤਾਵੇਜ਼ Gemini ਰਾਹੀਂ ਤਿਆਰ ਹੁੰਦੇ ਹਨ।",statusOffline:"Gemini ਚਾਲੂ ਨਹੀਂ ਹੈ; ਪੰਜਾਬੀ ਅਨੁਵਾਦ ਉਪਲਬਧ ਨਹੀਂ।",oldServer:"ਸਰਵਰ ਦਾ ਵਰਜਨ ਪੁਰਾਣਾ ਹੈ। ਨਵੇਂ ਪ੍ਰੋਜੈਕਟ ਫੋਲਡਰ ਤੋਂ ਸਰਵਰ ਮੁੜ ਚਾਲੂ ਕਰੋ।",connection:"ਸੰਪਰਕ ਵਿੱਚ ਸਮੱਸਿਆ ਹੈ। ਕੀ ਸਰਵਰ ਚੱਲ ਰਿਹਾ ਹੈ?",chips:[["ਮਕਾਨ ਮਾਲਕ ਜਮ੍ਹਾਂ ਰਕਮ ਵਾਪਸ ਨਹੀਂ ਕਰਦਾ","ਮੇਰਾ ਮਕਾਨ ਮਾਲਕ ਮੇਰੀ 50,000 ਰੁਪਏ ਦੀ ਸੁਰੱਖਿਆ ਜਮ੍ਹਾਂ ਰਕਮ ਵਾਪਸ ਨਹੀਂ ਕਰ ਰਿਹਾ। ਮੈਂ ਮਾਰਚ 2026 ਵਿੱਚ ਘਰ ਖਾਲੀ ਕੀਤਾ ਸੀ।"],["ਰਿਫੰਡ ਨਹੀਂ ਮਿਲਿਆ","ਮੈਂ ਖਰਾਬ ਫ਼ੋਨ ਲਈ 8,000 ਰੁਪਏ ਦਿੱਤੇ ਸਨ। ਦੁਕਾਨਦਾਰ ਇੱਕ ਮਹੀਨੇ ਬਾਅਦ ਵੀ ਰਿਫੰਡ ਨਹੀਂ ਕਰ ਰਿਹਾ।"],["ਤਨਖ਼ਾਹ ਨਹੀਂ ਮਿਲੀ","ਮੇਰੀ ਕੰਪਨੀ ਨੇ 3 ਮਹੀਨਿਆਂ ਤੋਂ ਤਨਖ਼ਾਹ ਨਹੀਂ ਦਿੱਤੀ। ਕੁੱਲ 1.5 ਲੱਖ ਰੁਪਏ ਬਕਾਇਆ ਹਨ।"],["ਨੋਟਿਸ ਮਿਲਿਆ","ਮੈਨੂੰ ਮਕਾਨ ਮਾਲਕ ਦੇ ਵਕੀਲ ਤੋਂ ਕਾਨੂੰਨੀ ਨੋਟਿਸ ਮਿਲਿਆ ਹੈ। ਉਹ 80,000 ਰੁਪਏ ਮੰਗਦਾ ਹੈ ਅਤੇ ਕਹਿੰਦਾ ਹੈ ਕਿ 15 ਦਿਨਾਂ ਵਿੱਚ ਭੁਗਤਾਨ ਕਰੋ, ਨਹੀਂ ਤਾਂ ਅਦਾਲਤ ਵਿੱਚ ਕੇਸ ਕਰੇਗਾ।"]]},
+ Hindi:{title:"न्याय साथी - कानूनी जानकारी सहायक",description:"जमा राशि · रिफंड · वेतन · मिला कानूनी नोटिस | यह कानूनी जानकारी है, कानूनी सलाह नहीं।",dashboard:"गुणवत्ता डैशबोर्ड",placeholder:"अपनी समस्या बताइए...",send:"भेजें",voice:"बोलने की भाषा",read:"जवाब ज़ोर से सुनें",download:"डाउनलोड / प्रिंट:",exports:{summary:"केस का सार",notice:"कानूनी नोटिस",checklist:"सबूतों की सूची",reply:"नोटिस का जवाब",calendar:"रिमाइंडर (.ics)"},statusGemini:"Gemini चालू है। अन्य भाषाओं के जवाब और दस्तावेज़ Gemini से तैयार होते हैं।",statusOffline:"Gemini चालू नहीं है; हिंदी/क्षेत्रीय भाषा का अनुवाद उपलब्ध नहीं है।",oldServer:"सर्वर का संस्करण पुराना है। नए प्रोजेक्ट फ़ोल्डर से सर्वर फिर शुरू करें।",connection:"कनेक्शन में समस्या है। क्या सर्वर चल रहा है?",chips:[["मकान मालिक जमा राशि नहीं लौटाता","मकान मालिक मेरी 50,000 रुपये की सुरक्षा जमा राशि वापस नहीं कर रहा। मैंने मार्च 2026 में घर खाली किया था।"],["रिफंड नहीं मिला","मैंने खराब फोन के लिए 8,000 रुपये दिए थे। दुकानदार एक महीने बाद भी रिफंड नहीं कर रहा।"],["वेतन नहीं मिला","मेरी कंपनी ने 3 महीने से वेतन नहीं दिया है। कुल 1.5 लाख रुपये बाकी हैं।"],["नोटिस मिला","मुझे मकान मालिक के वकील से कानूनी नोटिस मिला है। वह 80,000 रुपये माँगता है और 15 दिनों में भुगतान न करने पर अदालत में केस करने की बात कहता है।"]]}
+};
+let currentLanguage="English",serverBuildCurrent=false,geminiEnabled=false;
+const UI_EXTRAS={
+ English:{mic:"Speak",voiceError:"Voice input needs Chrome/Edge.",micError:"Mic: "},
+ Punjabi:{mic:"ਬੋਲੋ",voiceError:"ਆਵਾਜ਼ ਰਾਹੀਂ ਲਿਖਣ ਲਈ Chrome ਜਾਂ Edge ਵਰਤੋ।",micError:"ਮਾਈਕ: "},
+ Hindi:{mic:"बोलें",voiceError:"आवाज़ से लिखने के लिए Chrome या Edge इस्तेमाल करें।",micError:"माइक: "}
+};
+function updateStatus(){const l=LOCALES[currentLanguage];$("model-status").textContent=!serverBuildCurrent?l.oldServer:geminiEnabled?l.statusGemini:l.statusOffline}
+function setLocale(language){currentLanguage=LOCALES[language]?language:"English";const l=LOCALES[currentLanguage],x=UI_EXTRAS[currentLanguage];document.documentElement.lang=currentLanguage==="Punjabi"?"pa":currentLanguage==="Hindi"?"hi":"en";$("app-title").textContent=l.title;$("app-description").textContent=l.description;$("dashboard-link").textContent=l.dashboard;$("in").placeholder=l.placeholder;$("send").textContent=l.send;$("voice-label").textContent=l.voice;$("read-label").textContent=l.read;$("mic").title=x.mic;$("mic").setAttribute("aria-label",x.mic);document.querySelectorAll(".chips button").forEach((b,i)=>{if(l.chips[i])b.textContent=l.chips[i][0]});if(!SR){$("vs").textContent=x.voiceError}updateStatus();}
+const EXL=Object.fromEntries(Object.entries(LOCALES.English.exports).map(([k,v])=>[k,v]));
+function showEx(list){document.querySelectorAll(".ex").forEach(e=>e.remove());if(!list.length)return;const l=LOCALES[currentLanguage];const d=document.createElement("div");d.className="ex";d.append(l.download+" ");
+ list.forEach(k=>{const a=document.createElement("a");a.href="/export?sid="+sid+"&kind="+k;a.target="_blank";if(k==="calendar"){a.removeAttribute("target");a.download="nyay-saathi-reminders.ics"}a.textContent=l.exports[k]||k;d.appendChild(a)});$("log").appendChild(d);$("log").scrollTop=1e9}
 async function send(t,silent){t=(t||$("in").value).trim();if(!t)return;$("in").value="";if(!silent)add(t,true);
  try{const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({session:sid,message:t})});
- const j=await r.json();sid=j.session;add(j.reply,false);showEx(j.exports||[]);if(j.lang==="hi")$("vl").value="hi-IN";
+ const j=await r.json();sid=j.session;setLocale(j.lang);if(j.lang==="Hindi")$("vl").value="hi-IN";if(j.lang==="Punjabi")$("vl").value="pa-IN";add(j.reply,false);showEx(j.exports||[]);
  if($("spk").checked&&window.speechSynthesis){const u=new SpeechSynthesisUtterance(j.reply.replace(/[#*_>\[\]]/g,""));u.lang=$("vl").value;speechSynthesis.cancel();speechSynthesis.speak(u)}
- }catch(e){add("Connection problem. Is the server running?",false)}}
+ }catch(e){add(LOCALES[currentLanguage].connection,false)}}
 $("send").onclick=()=>send();$("in").onkeydown=e=>{if(e.key==="Enter")send()};
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(!SR){$("mic").disabled=true;$("vs").textContent="Voice input needs Chrome/Edge."}
+if(!SR){$("mic").disabled=true}
 else{const r=new SR();r.interimResults=false;let on=false;
  $("mic").onclick=()=>{if(on){r.stop();return}r.lang=$("vl").value;r.start()};
  r.onstart=()=>{on=true;$("mic").classList.add("on")};r.onend=()=>{on=false;$("mic").classList.remove("on")};
- r.onresult=e=>{$("in").value=e.results[0][0].transcript;send()};r.onerror=e=>{$("vs").textContent="Mic: "+e.error}}
+ r.onresult=e=>{$("in").value=e.results[0][0].transcript;send()};r.onerror=e=>{$("vs").textContent=UI_EXTRAS[currentLanguage].micError+e.error}}
 [["Landlord won't return deposit","My landlord is not returning my security deposit of Rs 50,000. I vacated in March 2026."],
  ["Refund not received","I paid Rs 8000 for a defective phone and the seller refuses a refund, 1 month ago"],
  ["Salary not paid","My company has not paid my salary for 3 months, Rs 1.5 lakh in total"],
- ["Received a notice","I received a legal notice from an advocate for my landlord. He claims Rs 80,000 and says pay within 15 days or he will file a court case."],
- ["हिन्दी में","मेरा मकान मालिक डिपॉजिट नहीं दे रहा, 40000 रुपये, 2 महीने पहले घर खाली किया"]].forEach(([l,m])=>{const b=document.createElement("button");b.textContent=l;b.onclick=()=>send(m);$("chips").appendChild(b)});
+ ["Received a notice","I received a legal notice from an advocate for my landlord. He claims Rs 80,000 and says pay within 15 days or he will file a court case."]].forEach(([l],i)=>{const b=document.createElement("button");b.textContent=l;b.onclick=()=>send(LOCALES[currentLanguage].chips[i][1]);$("chips").appendChild(b)});
+setLocale("English");
 send("hi",true);
 </script></body></html>

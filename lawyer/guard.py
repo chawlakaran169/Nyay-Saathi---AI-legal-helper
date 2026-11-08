@@ -59,6 +59,9 @@ def accept_rewrite(original, rewritten):
     new_nums = numbers(rewritten) - numbers(original)
     if new_nums:
         v.append("new numbers introduced: " + ",".join(sorted(new_nums)))
+    missing_nums = numbers(original) - numbers(rewritten)
+    if missing_nums:
+        v.append("numbers omitted: " + ",".join(sorted(missing_nums)))
     return v
 
 
