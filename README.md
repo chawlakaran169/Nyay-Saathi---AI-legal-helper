@@ -62,7 +62,7 @@ export LAWYER_LLM=gemini  GEMINI_API_KEY=...        # or: openai (OPENAI_API_KEY
 export LAWYER_MODEL=<model name>                      # optional
 python3 server.py
 ```
-The LLM does only limited language tasks and topic fallback. Rewritten output must pass the guard (no new law, section, case or number) or the grounded text is used instead. Live provider integration requires a valid key and has not been tested without one.
+The LLM does only limited language tasks and topic fallback. Rewritten output must pass the guard (no new law, section, case or number) or the grounded text is used instead. The owner manually confirmed Punjabi translation and a response on their local Gemini setup. The live topic-classifier fallback has not been separately tested; automated tests use fake providers and do not require a key.
 
 ## Layout
 `kb/` knowledge base · `lawyer/` engine, guard, notice, roleplay, LLM adapter · `web/` chat UI · `tests/` cases + probes · `outputs/` raw results · `doc/` solution doc + video script
