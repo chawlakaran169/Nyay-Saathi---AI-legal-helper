@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-11-08T13:53:35",
+  "run_at": "2026-11-09T12:17:32",
   "cases": [
     {
       "id": "01_deposit_en_full",
@@ -172,7 +172,8 @@
       "blocked": true,
       "why": [
         "unverified section: Section 420",
-        "new numbers introduced: 420"
+        "new numbers introduced: 420",
+        "numbers omitted: 35"
       ]
     },
     {
@@ -188,7 +189,8 @@
       "attack": "invented number",
       "blocked": true,
       "why": [
-        "new numbers introduced: 9"
+        "new numbers introduced: 9",
+        "numbers omitted: 5"
       ]
     },
     {
@@ -216,7 +218,7 @@
       "attack": "engine+hallucinating LLM (Hindi)",
       "blocked": true,
       "why": [
-        "rewrite rejected: unknown law: Tenant Protection Act, 2015; case-style citation: Sharma v. S; case-style citation: (2020) 3 SCC; new numbers introduced: 2015,2020,9"
+        "rewrite rejected: number markers were changed or omitted"
       ]
     }
   ],
@@ -238,6 +240,16 @@
     },
     {
       "name": "export: every export passes the guard",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "reply template: explains bracketed prompts and avoids implying the recipient must pause action",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "export: print and download controls use all nine selected interface languages",
       "pass": true,
       "why": ""
     },
@@ -302,6 +314,16 @@
       "why": ""
     },
     {
+      "name": "Hindi: Gemini quota failures are explained in Hindi",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "Hindi: reply rewrite quota failure is clearly explained in Hindi",
+      "pass": true,
+      "why": ""
+    },
+    {
       "name": "Punjabi: offline server explains Gemini must be enabled",
       "pass": true,
       "why": ""
@@ -317,6 +339,41 @@
       "why": ""
     },
     {
+      "name": "Punjabi: exported notice is rewritten in Punjabi",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "Punjabi: calendar export translates event text and keeps iCalendar structure",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "Punjabi: print/export page controls are Punjabi",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "Punjabi: short English answers keep the conversation language",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "Punjabi: a clear English language switch changes the conversation language",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "Hindi: translated reply preserves protected numbers and remains in Hindi",
+      "pass": true,
+      "why": ""
+    },
+    {
+      "name": "Selected interface language controls the assistant reply language",
+      "pass": true,
+      "why": ""
+    },
+    {
       "name": "calendar: valid .ics with events, alarms and CRLF",
       "pass": true,
       "why": ""
@@ -324,7 +381,7 @@
     {
       "name": "calendar: dates are real and in the future",
       "pass": true,
-      "why": "['20261111', '20261115', '20261130', '20281208']"
+      "why": "['20261112', '20261116', '20261201', '20281209']"
     },
     {
       "name": "calendar: time-barred deposit gets an URGENT event",
@@ -379,7 +436,7 @@
     {
       "name": "failure log (opt-in): stores redacted text only",
       "pass": true,
-      "why": "{\"ts\": \"2026-11-08T13:53:35\", \"outcome\": \"referred/asked/blocked\", \"lang\": \"en\", \"text\": \""
+      "why": "{\"ts\": \"2026-11-09T12:17:32\", \"outcome\": \"referred/asked/blocked\", \"lang\": \"en\", \"text\": \""
     },
     {
       "name": "failure log is OFF by default",

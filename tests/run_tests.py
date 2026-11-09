@@ -75,6 +75,28 @@ def extra_checks():
     chk("export: notice has brackets for unknown facts", "[YOUR FULL NAME AND ADDRESS]" in s.export("notice"))
     chk("export: summary has sources and checklist", "Sources used" in s.export("summary") and "Evidence checklist" in s.export("summary"))
     chk("export: every export passes the guard", all(not guard.violations(s.export(k)) for k in ex))
+    from lawyer.received import reply_draft
+    reply = reply_draft("en", {"amounts": [80000]})
+    chk("reply template: explains bracketed prompts and avoids implying the recipient must pause action",
+        "Replace every [bracketed prompt]" in reply and "take no further step" not in reply)
+    from server import printable
+    print_labels = {
+        "English": ("Print / Save as PDF", "Download .txt"),
+        "Hindi": ("प्रिंट करें / PDF के रूप में सहेजें", "टेक्स्ट फ़ाइल डाउनलोड करें"),
+        "Punjabi": ("ਛਾਪੋ / PDF ਵਜੋਂ ਸੰਭਾਲੋ", "ਟੈਕਸਟ ਫ਼ਾਈਲ ਡਾਊਨਲੋਡ ਕਰੋ"),
+        "Tamil": ("அச்சிடு / PDF ஆக சேமி", "உரை கோப்பைப் பதிவிறக்கு"),
+        "Telugu": ("ముద్రించు / PDFగా సేవ్ చేయి", "టెక్స్ట్ ఫైల్ డౌన్‌లోడ్ చేయి"),
+        "Bengali": ("প্রিন্ট / PDF হিসেবে সংরক্ষণ", "টেক্সট ফাইল ডাউনলোড"),
+        "Gujarati": ("પ્રિન્ટ / PDF તરીકે સાચવો", "ટેક્સ્ટ ફાઇલ ડાઉનલોડ કરો"),
+        "Kannada": ("ಮುದ್ರಿಸಿ / PDF ಆಗಿ ಉಳಿಸಿ", "ಪಠ್ಯ ಫೈಲ್ ಡೌನ್‌లోಡ್ ಮಾಡಿ"),
+        "Malayalam": ("പ്രിന്റ് / PDF ആയി സംരക്ഷിക്കുക", "ടെക്സ്റ്റ് ഫയൽ ഡൗൺലോഡ് ചെയ്യുക"),
+    }
+    print_pages = {language: printable("case file", "test", "summary", language) for language in print_labels}
+    chk("export: print and download controls use all nine selected interface languages",
+        "Print / Save as PDF" in print_pages["English"] and "Download .txt" in print_pages["English"]
+        and all("Print / Save as PDF" not in print_pages[language] and "Download .txt" not in print_pages[language]
+                and "<title>Nyay Saathi</title>" not in print_pages[language]
+                for language in print_labels if language != "English"))
     s2 = Session(); s2.llm = None
     chk("export: nothing exported before a case exists", "Nothing to export" in s2.export("summary"))
     import datetime

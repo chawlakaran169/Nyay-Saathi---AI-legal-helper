@@ -96,7 +96,7 @@ Here is a **draft** legal notice. Fill the [BRACKETS], check every fact, and ide
 ---
 **LEGAL NOTICE (DRAFT)**
 
-Date: 08 November 2026
+Date: 09 November 2026
 From: [YOUR FULL NAME AND ADDRESS]
 To: [LANDLORD'S FULL NAME AND ADDRESS]
 Sent by: Speed Post and Email

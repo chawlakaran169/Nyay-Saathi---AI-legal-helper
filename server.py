@@ -8,7 +8,7 @@ from lawyer import llm as llm_mod
 SESSIONS = {}
 HERE = os.path.dirname(os.path.abspath(__file__))
 LLM_PROVIDER = "none"
-BUILD_ID = "localized-exports-v5"
+BUILD_ID = "localized-exports-v6"
 
 
 def printable(text, sid, kind, language):
@@ -16,6 +16,12 @@ def printable(text, sid, kind, language):
         "Punjabi": ("ਛਾਪੋ / PDF ਵਜੋਂ ਸੰਭਾਲੋ", "ਟੈਕਸਟ ਫ਼ਾਈਲ ਡਾਊਨਲੋਡ ਕਰੋ", "ਨਿਆਂ ਸਾਥੀ"),
         "Hindi": ("प्रिंट करें / PDF के रूप में सहेजें", "टेक्स्ट फ़ाइल डाउनलोड करें", "न्याय साथी"),
         "English": ("Print / Save as PDF", "Download .txt", "Nyay Saathi"),
+        "Tamil": ("அச்சிடு / PDF ஆக சேமி", "உரை கோப்பைப் பதிவிறக்கு", "நியாய சாத்தி"),
+        "Telugu": ("ముద్రించు / PDFగా సేవ్ చేయి", "టెక్స్ట్ ఫైల్ డౌన్‌లోడ్ చేయి", "న్యాయ సాథి"),
+        "Bengali": ("প্রিন্ট / PDF হিসেবে সংরক্ষণ", "টেক্সট ফাইল ডাউনলোড", "ন্যায় সাথী"),
+        "Gujarati": ("પ્રિન્ટ / PDF તરીકે સાચવો", "ટેક્સ્ટ ફાઇલ ડાઉનલોડ કરો", "ન્યાય સાથી"),
+        "Kannada": ("ಮುದ್ರಿಸಿ / PDF ಆಗಿ ಉಳಿಸಿ", "ಪಠ್ಯ ಫೈಲ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ", "ನ್ಯಾಯ ಸಾಥಿ"),
+        "Malayalam": ("പ്രിന്റ് / PDF ആയി സംരക്ഷിക്കുക", "ടെക്സ്റ്റ് ഫയൽ ഡൗൺലോഡ് ചെയ്യുക", "ന്യായ് സാഥി"),
     }
     print_label, download_label, title = labels.get(language, labels["English"])
     body = html.escape(text)

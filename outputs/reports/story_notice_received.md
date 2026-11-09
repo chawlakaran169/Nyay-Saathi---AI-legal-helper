@@ -35,7 +35,9 @@ A legal notice is a formal warning letter, usually from a lawyer, saying what th
 
 **DRAFT REPLY TO LEGAL NOTICE**
 
-Date: 08 November 2026
+**Before sending:** Replace every [bracketed prompt], choose only one option in paragraph 2, remove unused choices, and confirm every statement is true. This is a template, not legal advice; ask a lawyer to review urgent or complex notices.
+
+Date: 09 November 2026
 To: [SENDER / THEIR ADVOCATE, ADDRESS]
 From: [YOUR FULL NAME AND ADDRESS]
 Reference: Your notice dated [DATE OF NOTICE], received by me on [DATE YOU RECEIVED IT]
@@ -46,7 +48,7 @@ Sir/Madam,
 2. [CHOOSE ONE AND DELETE THE OTHERS: (a) I dispute the claim in full. (b) I dispute part of the claim, namely [PART]. (c) I accept ₹1,50,000 is due and request time to pay on [PLAN].]
 3. Please send me copies of the documents and calculation on which the claim of ₹1,50,000 is based, such as [AGREEMENT / RECEIPTS / STATEMENT OF ACCOUNT].
 4. My version of the facts: [2 TO 4 SHORT, FACTUAL SENTENCES WITH DATES. ATTACH PROOF.]
-5. [ONLY IF TRUE: I am willing to discuss and settle this matter.] I request you to take no further step until you have responded to this reply.
+5. Please send any further communication about this matter to [EMAIL / POSTAL ADDRESS]. I will review the documents and respond as appropriate.
 
 Enclosures: [LIST COPIES OF YOUR DOCUMENTS]
 

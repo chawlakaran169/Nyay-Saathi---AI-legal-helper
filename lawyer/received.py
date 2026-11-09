@@ -17,6 +17,8 @@ SENDER = [("lawyer", re.compile(r"advocate|lawyer|counsel|through my client|unde
 REPLY = {
 "en": """**DRAFT REPLY TO LEGAL NOTICE**
 
+**Before sending:** Replace every [bracketed prompt], choose only one option in paragraph 2, remove unused choices, and confirm every statement is true. This is a template, not legal advice; ask a lawyer to review urgent or complex notices.
+
 Date: {today}
 To: [SENDER / THEIR ADVOCATE, ADDRESS]
 From: [YOUR FULL NAME AND ADDRESS]
@@ -28,13 +30,15 @@ Sir/Madam,
 2. [CHOOSE ONE AND DELETE THE OTHERS: (a) I dispute the claim in full. (b) I dispute part of the claim, namely [PART]. (c) I accept {amount} is due and request time to pay on [PLAN].]
 3. Please send me copies of the documents and calculation on which the claim {amount_phrase}is based, such as [AGREEMENT / RECEIPTS / STATEMENT OF ACCOUNT].
 4. My version of the facts: [2 TO 4 SHORT, FACTUAL SENTENCES WITH DATES. ATTACH PROOF.]
-5. [ONLY IF TRUE: I am willing to discuss and settle this matter.] I request you to take no further step until you have responded to this reply.
+5. Please send any further communication about this matter to [EMAIL / POSTAL ADDRESS]. I will review the documents and respond as appropriate.
 
 Enclosures: [LIST COPIES OF YOUR DOCUMENTS]
 
 Yours faithfully,
 [NAME]   [SIGNATURE]   [PHONE / EMAIL]""",
 "hi": """**कानूनी नोटिस का जवाब (ड्राफ्ट)**
+
+**भेजने से पहले:** हर [कोष्ठक वाले निर्देश] को भरें, अनुच्छेद 2 में केवल एक विकल्प चुनें, बाकी विकल्प हटाएँ और हर बात की पुष्टि करें। यह केवल एक नमूना है, कानूनी सलाह नहीं; ज़रूरी या जटिल नोटिस के लिए वकील से जाँच कराएँ।
 
 तारीख: {today}
 प्रति: [भेजने वाला / उनके एडवोकेट, पता]
@@ -47,7 +51,7 @@ Yours faithfully,
 2. [एक चुनें और बाकी हटाएँ: (क) मैं दावे को पूरी तरह अस्वीकार करता/करती हूँ। (ख) मैं दावे के एक हिस्से, यानी [हिस्सा], को अस्वीकार करता/करती हूँ। (ग) मैं मानता/मानती हूँ कि {amount} देय है और [योजना] पर भुगतान के लिए समय माँगता/माँगती हूँ।]
 3. कृपया वे दस्तावेज़ और गणना की प्रतियाँ भेजें जिन पर दावा {amount_phrase}आधारित है, जैसे [एग्रीमेंट / रसीदें / खाता-विवरण]।
 4. तथ्यों पर मेरा पक्ष: [2 से 4 छोटे, तथ्यात्मक वाक्य, तारीख़ों सहित। सबूत संलग्न करें।]
-5. [केवल यदि सच हो: मैं बातचीत से मामला सुलझाने को तैयार हूँ।] मैं अनुरोध करता/करती हूँ कि इस जवाब का उत्तर देने तक आप कोई आगे की कार्रवाई न करें।
+5. कृपया इस मामले के आगे के संदेश [ईमेल / डाक का पता] पर भेजें। दस्तावेज़ देखने के बाद मैं उचित जवाब दूँगा/दूँगी।
 
 संलग्न: [अपने दस्तावेज़ों की प्रतियाँ सूचीबद्ध करें]
 

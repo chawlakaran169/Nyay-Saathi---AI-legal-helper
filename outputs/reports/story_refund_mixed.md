@@ -95,7 +95,7 @@ _General information, not legal advice. Laws change; verify using the links abov
 
 **LEGAL NOTICE (DRAFT)**
 
-Date: 08 November 2026
+Date: 09 November 2026
 From: [YOUR FULL NAME AND ADDRESS]
 To: [COMPANY / SELLER NAME, REGISTERED ADDRESS, GRIEVANCE OFFICER EMAIL]
 Sent by: Speed Post and Email
