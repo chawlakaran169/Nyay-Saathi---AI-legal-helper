@@ -60,9 +60,9 @@
   ],
   "perf": {
     "messages": 1200,
-    "p50_ms": 0.68,
-    "p95_ms": 1.75,
-    "max_ms": 6.06,
-    "msgs_per_sec_single_core": 1248
+    "p50_ms": 0.93,
+    "p95_ms": 2.83,
+    "max_ms": 10.05,
+    "msgs_per_sec_single_core": 822
   }
 }

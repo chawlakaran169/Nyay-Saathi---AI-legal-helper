@@ -60,7 +60,7 @@ select{background:var(--card);color:var(--ink);border:1px solid var(--line);bord
 <script>
 const $=id=>document.getElementById(id);let sid=null,languageExplicit=false;
 fetch("/api/health").then(r=>{if(!r.ok)throw Error("old server");return r.json()}).then(h=>{
- serverBuildCurrent=h.build==="localized-exports-v6";geminiEnabled=h.llm==="gemini";updateStatus();
+ serverBuildCurrent=h.build==="localized-exports-v7";geminiEnabled=h.llm==="gemini";updateStatus();
 }).catch(()=>{serverBuildCurrent=false;updateStatus()});
 function md(t){return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/^### (.*)$/gm,"<h3>$1</h3>").replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/_(.+?)_/g,"<i>$1</i>")}
 function add(t,me){const d=document.createElement("div");d.className="m"+(me?" me":"");d.innerHTML=me?md(t):md(t);$("log").appendChild(d);$("log").scrollTop=1e9;return d}

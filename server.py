@@ -8,7 +8,7 @@ from lawyer import llm as llm_mod
 SESSIONS = {}
 HERE = os.path.dirname(os.path.abspath(__file__))
 LLM_PROVIDER = "none"
-BUILD_ID = "localized-exports-v6"
+BUILD_ID = "localized-exports-v7"
 
 
 def printable(text, sid, kind, language):

@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-11-09T12:17:32",
+  "run_at": "2026-11-09T14:32:04",
   "cases": [
     {
       "id": "01_deposit_en_full",
@@ -218,7 +218,7 @@
       "attack": "engine+hallucinating LLM (Hindi)",
       "blocked": true,
       "why": [
-        "rewrite rejected: number markers were changed or omitted"
+        null
       ]
     }
   ],
@@ -319,7 +319,7 @@
       "why": ""
     },
     {
-      "name": "Hindi: reply rewrite quota failure is clearly explained in Hindi",
+      "name": "Hindi input: native Hindi reply does not depend on Gemini",
       "pass": true,
       "why": ""
     },
@@ -364,7 +364,7 @@
       "why": ""
     },
     {
-      "name": "Hindi: translated reply preserves protected numbers and remains in Hindi",
+      "name": "Selected Hindi reply: translation preserves protected numbers and remains in Hindi",
       "pass": true,
       "why": ""
     },
@@ -436,7 +436,7 @@
     {
       "name": "failure log (opt-in): stores redacted text only",
       "pass": true,
-      "why": "{\"ts\": \"2026-11-09T12:17:32\", \"outcome\": \"referred/asked/blocked\", \"lang\": \"en\", \"text\": \""
+      "why": "{\"ts\": \"2026-11-09T14:32:04\", \"outcome\": \"referred/asked/blocked\", \"lang\": \"en\", \"text\": \""
     },
     {
       "name": "failure log is OFF by default",

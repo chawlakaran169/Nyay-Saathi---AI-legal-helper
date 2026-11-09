@@ -171,13 +171,17 @@ def extra_checks():
     chk("Hindi: Gemini quota failures are explained in Hindi",
         "API उपयोग सीमा" in __import__("lawyer.engine", fromlist=["_translation_failure"])._translation_failure(
             llm_mod.LLMError("HTTP 429"), "Hindi", []))
-    class HindiQuotaFake:
+    class UnexpectedHindiRewrite:
+        def __init__(self): self.calls = 0
         def complete(self, system, user):
+            self.calls += 1
             raise llm_mod.LLMError("HTTP 429")
-    hindi_quota_reply = Session(llm=HindiQuotaFake()).say(
+    hindi_rewrite_fake = UnexpectedHindiRewrite()
+    hindi_quota_session = Session(llm=hindi_rewrite_fake)
+    hindi_quota_reply = hindi_quota_session.say(
         "मेरा मकान मालिक मेरी 40,000 रुपये की जमा राशि वापस नहीं कर रहा।")
-    chk("Hindi: reply rewrite quota failure is clearly explained in Hindi",
-        "अनुरोध सीमा" in hindi_quota_reply and "जवाब हिंदी में तैयार नहीं हो सका" in hindi_quota_reply
+    chk("Hindi input: native Hindi reply does not depend on Gemini",
+        hindi_rewrite_fake.calls == 0 and "**समस्या:**" in hindi_quota_reply
         and "अनुवाद नहीं हो सका" not in hindi_quota_reply)
     no_llm_punjabi = Session(llm=None).say(punjabi)
     chk("Punjabi: offline server explains Gemini must be enabled",
@@ -212,12 +216,15 @@ def extra_checks():
     class HindiNumberRewriteFake:
         def complete(self, system, user):
             markers = __import__("re").findall(r"\[\[NSNUM[A-Z]+\]\]", user)
-            return "हिंदी में जवाब। " + " ".join(markers)
+            return "मेरे मकान मालिक ने मेरी जमा राशि वापस नहीं की। " + " ".join(markers)
     hindi_rewrite = Session(llm=HindiNumberRewriteFake())
-    hindi_reply = hindi_rewrite.say(
-        "मेरा मकान मालिक मेरी 40,000 रुपये की सुरक्षा जमा राशि वापस नहीं कर रहा। मैंने दो महीने पहले घर खाली किया।")
-    chk("Hindi: translated reply preserves protected numbers and remains in Hindi",
-        "हिंदी में जवाब" in hindi_reply and "4" in hindi_reply and "rewrite accepted" == hindi_rewrite.meta["llm"])
+    hindi_rewrite.preferred_language = "Hindi"
+    hindi_rewrite.say("My landlord is not returning my security deposit of Rs 40,000. I moved out two months ago.")
+    hindi_rewrite.say("I have the rental agreement and bank transfer receipt.")
+    hindi_reply = hindi_rewrite.say("No")
+    chk("Selected Hindi reply: translation preserves protected numbers and remains in Hindi",
+        "मेरे मकान मालिक" in hindi_reply and "40,000" in hindi_reply
+        and "rewrite accepted" == hindi_rewrite.meta["llm"])
     class SelectedLanguageFake:
         def complete(self, system, user):
             markers = __import__("re").findall(r"\[\[NSNUM[A-Z]+\]\]", user)

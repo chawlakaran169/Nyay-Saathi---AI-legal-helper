@@ -616,7 +616,8 @@ class Session:
     def _polish(self, text):
         name = self.output_language
         try:
-            if name == "English" and self.lang != "hi" and not self.ai_lang:
+            base_language = "Hindi" if self.lang == "hi" else "English"
+            if name == base_language and not self.ai_lang:
                 return text
             protected, numbers = _protect_numbers(text)
             system = llm_mod.REWRITE_SYSTEM.format(lang=name)
