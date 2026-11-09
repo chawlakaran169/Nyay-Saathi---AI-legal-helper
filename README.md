@@ -15,6 +15,16 @@ python3 run_story.py samples/   # NEW INPUT: any story .txt (or folder) -> full 
 python3 tests/probes.py    # unscripted probes -> outputs/probes.md
 ```
 
+## Deploy a public demo on Render
+
+The included `render.yaml` configures a free Python web service with `/api/health` as its health check. To deploy:
+
+1. Push this project to a GitHub repository you control.
+2. In Render, choose **New → Blueprint**, connect that repository, and deploy the `render.yaml` blueprint.
+3. Open the public `*.onrender.com` URL Render provides. Confirm `/api/health` reports `"build":"localized-exports-v7"` and `"llm":"none"`.
+
+The public demo intentionally runs without Gemini or an API key. Anyone with the URL can use it, and chat sessions are temporary in-memory data that disappear when the service restarts or sleeps. Do not enter real names, contact details, case documents, or other sensitive information; demonstrate it only with fictional examples. Free services may take a little time to wake after inactivity.
+
 ## Features
 - Nine-language interface selector (English, Hindi, Punjabi, Tamil, Telugu, Bengali, Gujarati, Kannada, Malayalam), localized examples, side panels, and export controls; grounded assistant replies and translated exports follow the selected language when the optional Gemini service is available. Voice recognition depends on browser/device support; asks <=4 questions, then explains where you stand, options, time limit, this week's steps, and sources
 - **Draft legal notice** (EN/HI) with [BRACKETS] for facts the user did not give

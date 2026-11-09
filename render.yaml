@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: nyay-saathi
+    runtime: python
+    plan: free
+    buildCommand: ""
+    startCommand: python server.py
+    healthCheckPath: /api/health
+    envVars:
+      - key: LAWYER_LLM
+        value: none
