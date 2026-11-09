@@ -149,6 +149,14 @@ def extra_checks():
     chk("Hindi: Gemini quota failures are explained in Hindi",
         "API उपयोग सीमा" in __import__("lawyer.engine", fromlist=["_translation_failure"])._translation_failure(
             llm_mod.LLMError("HTTP 429"), "Hindi", []))
+    class HindiQuotaFake:
+        def complete(self, system, user):
+            raise llm_mod.LLMError("HTTP 429")
+    hindi_quota_reply = Session(llm=HindiQuotaFake()).say(
+        "मेरा मकान मालिक मेरी 40,000 रुपये की जमा राशि वापस नहीं कर रहा।")
+    chk("Hindi: reply rewrite quota failure is clearly explained in Hindi",
+        "अनुरोध सीमा" in hindi_quota_reply and "जवाब हिंदी में तैयार नहीं हो सका" in hindi_quota_reply
+        and "अनुवाद नहीं हो सका" not in hindi_quota_reply)
     no_llm_punjabi = Session(llm=None).say(punjabi)
     chk("Punjabi: offline server explains Gemini must be enabled",
         "ਪੰਜਾਬੀ ਅਨੁਵਾਦ ਲਈ Gemini ਚਾਲੂ ਕਰੋ" in no_llm_punjabi and "/api/health" in no_llm_punjabi)
@@ -188,6 +196,17 @@ def extra_checks():
         "मेरा मकान मालिक मेरी 40,000 रुपये की सुरक्षा जमा राशि वापस नहीं कर रहा। मैंने दो महीने पहले घर खाली किया।")
     chk("Hindi: translated reply preserves protected numbers and remains in Hindi",
         "हिंदी में जवाब" in hindi_reply and "4" in hindi_reply and "rewrite accepted" == hindi_rewrite.meta["llm"])
+    class SelectedLanguageFake:
+        def complete(self, system, user):
+            markers = __import__("re").findall(r"\[\[NSNUM[A-Z]+\]\]", user)
+            return "தமிழில் பதில். " + " ".join(markers)
+    selected_language = Session(llm=SelectedLanguageFake())
+    selected_language.preferred_language = "Tamil"
+    tamil_reply = selected_language.say(
+        "My landlord is not returning my security deposit of Rs 40,000. I moved out two months ago.")
+    chk("Selected interface language controls the assistant reply language",
+        "தமிழில் பதில்" in tamil_reply and selected_language.output_language == "Tamil"
+        and selected_language.meta["llm"] == "rewrite accepted")
     from lawyer import privacy, reminders
     ics = s.export("calendar")
     chk("calendar: valid .ics with events, alarms and CRLF", ics.startswith("BEGIN:VCALENDAR") and ics.count("BEGIN:VEVENT") >= 4 and "BEGIN:VALARM" in ics and "\r\n" in ics and ics.strip().endswith("END:VCALENDAR"))

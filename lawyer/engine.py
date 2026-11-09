@@ -19,19 +19,57 @@ UNSUPPORTED = ("This server can handle English and Hindi offline. Punjabi transl
 LOCALIZATION_FAILURE = {
     "Punjabi": "ਮਾਫ਼ ਕਰਨਾ, ਇਸ ਸਮੱਗਰੀ ਦਾ ਪੰਜਾਬੀ ਵਿੱਚ ਅਨੁਵਾਦ ਨਹੀਂ ਹੋ ਸਕਿਆ। Gemini ਦੀ ਕੁਨੈਕਸ਼ਨ ਅਤੇ API ਪਹੁੰਚ ਜਾਂਚੋ, ਫਿਰ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
     "Hindi": "माफ़ कीजिए, इस सामग्री का हिंदी में अनुवाद नहीं हो सका। Gemini का कनेक्शन और API पहुँच जाँचें, फिर दोबारा कोशिश करें।",
+    "Tamil": "மன்னிக்கவும், இந்த உள்ளடக்கத்தைத் தமிழில் மொழிபெயர்க்க முடியவில்லை. Gemini அணுகலைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
+    "Telugu": "క్షమించండి, ఈ విషయాన్ని తెలుగులోకి అనువదించలేకపోయాం. Gemini ప్రాప్యతను తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.",
+    "Bengali": "দুঃখিত, এই বিষয়বস্তু বাংলায় অনুবাদ করা যায়নি। Gemini-র সংযোগ যাচাই করে আবার চেষ্টা করুন।",
+    "Gujarati": "માફ કરશો, આ સામગ્રીનો ગુજરાતીમાં અનુવાદ થઈ શક્યો નથી. Geminiની પહોંચ તપાસો અને ફરી પ્રયાસ કરો.",
+    "Kannada": "ಕ್ಷಮಿಸಿ, ಈ ವಿಷಯವನ್ನು ಕನ್ನಡಕ್ಕೆ ಅನುವಾದಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. Gemini ಪ್ರವೇಶವನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+    "Malayalam": "ക്ഷമിക്കണം, ഈ ഉള്ളടക്കം മലയാളത്തിലേക്ക് വിവർത്തനം ചെയ്യാനായില്ല. Gemini ലഭ്യത പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.",
 }
 
 
 def _has_target_script(text, language):
-    if language == "Punjabi":
-        return any(0x0A00 <= ord(char) <= 0x0A7F for char in text)
-    if language == "Hindi":
-        return any(0x0900 <= ord(char) <= 0x097F for char in text)
-    return True
+    scripts = {
+        "Hindi": (0x0900, 0x097F), "Bengali": (0x0980, 0x09FF),
+        "Punjabi": (0x0A00, 0x0A7F), "Gujarati": (0x0A80, 0x0AFF),
+        "Tamil": (0x0B80, 0x0BFF), "Telugu": (0x0C00, 0x0C7F),
+        "Kannada": (0x0C80, 0x0CFF), "Malayalam": (0x0D00, 0x0D7F),
+    }
+    bounds = scripts.get(language)
+    return bounds is None or any(bounds[0] <= ord(char) <= bounds[1] for char in text)
 
 
 def _localization_failure(language):
     return LOCALIZATION_FAILURE.get(language, f"Sorry, I couldn't translate this content into {language}. Check Gemini access and try again.")
+
+
+def _rewrite_failure(error, language):
+    detail = str(error)
+    if "429" in detail:
+        messages = {
+            "Hindi": "Gemini की अनुरोध सीमा पूरी हो गई है, इसलिए जवाब हिंदी में तैयार नहीं हो सका। Google AI Studio में उपयोग और सीमा जाँचें; सीमा रीसेट होने पर फिर कोशिश करें।",
+            "Punjabi": "Gemini ਦੀਆਂ ਬੇਨਤੀਆਂ ਦੀ ਹੱਦ ਪੂਰੀ ਹੋ ਗਈ ਹੈ, ਇਸ ਲਈ ਜਵਾਬ ਪੰਜਾਬੀ ਵਿੱਚ ਤਿਆਰ ਨਹੀਂ ਹੋ ਸਕਿਆ। Google AI Studio ਵਿੱਚ ਵਰਤੋਂ ਅਤੇ ਹੱਦ ਜਾਂਚੋ; ਹੱਦ ਮੁੜ ਸ਼ੁਰੂ ਹੋਣ 'ਤੇ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+            "Tamil": "Gemini கோரிக்கை வரம்பு எட்டப்பட்டது; பதிலைத் தமிழில் உருவாக்க முடியவில்லை. AI Studio-வில் பயன்பாட்டு வரம்பைச் சரிபார்த்து, மீண்டும் முயற்சிக்கவும்.",
+            "Telugu": "Gemini అభ్యర్థన పరిమితి చేరింది; సమాధానాన్ని తెలుగులో సిద్ధం చేయలేకపోయాం. AI Studioలో వినియోగ పరిమితిని తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.",
+            "Bengali": "Gemini-র অনুরোধের সীমা পূর্ণ হয়েছে; বাংলায় উত্তর তৈরি করা যায়নি। AI Studio-তে ব্যবহারের সীমা দেখে পরে আবার চেষ্টা করুন।",
+            "Gujarati": "Geminiની વિનંતીની મર્યાદા પૂરી થઈ છે, તેથી ગુજરાતીમાં જવાબ તૈયાર થઈ શક્યો નથી. AI Studioમાં વપરાશની મર્યાદા તપાસો અને પછી ફરી પ્રયાસ કરો.",
+            "Kannada": "Gemini ವಿನಂತಿ ಮಿತಿ ತಲುಪಿದೆ; ಕನ್ನಡದಲ್ಲಿ ಉತ್ತರ ಸಿದ್ಧಪಡಿಸಲಾಗಲಿಲ್ಲ. AI Studio ಬಳಕೆಯ ಮಿತಿಯನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+            "Malayalam": "Gemini അഭ്യർത്ഥന പരിധി കഴിഞ്ഞു; മലയാളത്തിൽ മറുപടി തയ്യാറാക്കാനായില്ല. AI Studio ഉപയോഗപരിധി പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.",
+        }
+        return messages.get(language, f"Gemini's request limit was reached; the reply couldn't be prepared in {language}. Check AI Studio usage and retry after the limit resets.")
+    if "403" in detail or "401" in detail:
+        messages = {
+            "Hindi": "Gemini ने जवाब को हिंदी में तैयार करने की अनुमति नहीं दी। अपनी API कुंजी और पहुँच जाँचें।",
+            "Punjabi": "Gemini ਨੇ ਪੰਜਾਬੀ ਜਵਾਬ ਤਿਆਰ ਕਰਨ ਦੀ ਇਜਾਜ਼ਤ ਨਹੀਂ ਦਿੱਤੀ। ਆਪਣੀ API ਕੁੰਜੀ ਅਤੇ ਪਹੁੰਚ ਜਾਂਚੋ।",
+        }
+        return messages.get(language, f"Gemini denied access while preparing the {language} reply. Check the API key and permissions.")
+    if "network" in detail:
+        messages = {
+            "Hindi": "Gemini से संपर्क नहीं हो सका, इसलिए जवाब हिंदी में तैयार नहीं हुआ। इंटरनेट कनेक्शन जाँचें और फिर कोशिश करें।",
+            "Punjabi": "Gemini ਨਾਲ ਸੰਪਰਕ ਨਹੀਂ ਹੋ ਸਕਿਆ, ਇਸ ਲਈ ਪੰਜਾਬੀ ਜਵਾਬ ਤਿਆਰ ਨਹੀਂ ਹੋਇਆ। ਇੰਟਰਨੈੱਟ ਕਨੈਕਸ਼ਨ ਜਾਂਚੋ ਅਤੇ ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+        }
+        return messages.get(language, f"Gemini couldn't be reached to prepare the {language} reply. Check the internet connection and retry.")
+    return _localization_failure(language)
 
 
 def _alpha_index(index):
@@ -107,7 +145,7 @@ class Session:
 
     @property
     def output_language(self):
-        return self.ai_lang or ("Hindi" if self.lang == "hi" else "English")
+        return getattr(self, "preferred_language", None) or self.ai_lang or ("Hindi" if self.lang == "hi" else "English")
 
     def reset(self):
         self.lang, self.hinglish = "en", False
@@ -121,6 +159,7 @@ class Session:
         self.last_reply_draft = None
         self.wants_guarantee = False
         self.ai_lang = None
+        self.preferred_language = getattr(self, "preferred_language", None)
 
     # ---------- public ----------
     def reply(self, msg):
@@ -164,8 +203,11 @@ class Session:
             privacy.log_failure(original, "referred/asked/blocked", self.lang)
         out, bad = guard.enforce(out, self.lang)
         self.meta["violations"] = bad
-        if self.ai_lang and bad:
-            return _localization_failure(self.ai_lang)
+        base_language = "Hindi" if self.lang == "hi" else "English"
+        if self.output_language != base_language and not self.llm:
+            return _localization_failure(self.output_language)
+        if self.output_language != "English" and bad:
+            return _localization_failure(self.output_language)
         return self._polish(out) if (self.llm and not bad and self.mode != "roleplay") else out
 
     # ---------- routing ----------
@@ -497,24 +539,27 @@ class Session:
             body = self._checklist()
         elif kind == "calendar":
             events = reminders.events(self.topic, self.facts, L, notice_days=getattr(self, "notice_days", None))
-            if self.ai_lang:
+            base_language = "Hindi" if L == "hi" else "English"
+            target_language = self.output_language
+            if target_language != base_language:
                 events = self._translate_calendar_events(events)
-            alarm = {"Punjabi": "ਯਾਦ ਦਿਹਾਨੀ", "Hindi": "रिमाइंडर"}.get(self.ai_lang, "Reminder")
+            alarm = {"Punjabi": "ਯਾਦ ਦਿਹਾਨੀ", "Hindi": "रिमाइंडर"}.get(target_language, "Reminder")
             return reminders.ics(events, alarm=alarm)
         elif kind == "summary":
             body = self._advice() + "\n\n" + self._checklist()
         else:
             return t("export_none", L)
         text = f"# {t('export_head', L)}\n\n" + body
-        if self.ai_lang:
+        if self.output_language != ("Hindi" if L == "hi" else "English"):
             return self._polish(text)
         return text
 
     def _translate_calendar_events(self, events):
+        language = self.output_language
         originals = [[title, note] for _, title, note in events]
         protected = [[_protect_numbers(title), _protect_numbers(note)] for _, title, note in events]
         values = [[title[0], note[0]] for title, note in protected]
-        system = (f"Translate every human-readable string in this JSON array into {self.ai_lang}. "
+        system = (f"Translate every human-readable string in this JSON array into {language}. "
                   "Return only a JSON array with exactly the same shape and order. Keep every [[NSNUM...]] "
                   "marker unchanged exactly once. Do not add or remove any information.")
         try:
@@ -527,13 +572,13 @@ class Session:
             for row, source, original, protected_row in zip(translated, values, originals, protected):
                 row = [_restore_numbers(value, item[1]) for value, item in zip(row, protected_row)]
                 if (any(value is None for value in row)
-                        or not all(_has_target_script(value, self.ai_lang) for value in row)
+                        or not all(_has_target_script(value, language) for value in row)
                         or any(guard.numbers(src) != guard.numbers(dst) for src, dst in zip(original, row))):
-                    return _localization_failure(self.ai_lang)
+                    return _localization_failure(language)
                 restored.append(row)
             return [(event[0], row[0], row[1]) for event, row in zip(events, restored)]
         except (llm_mod.LLMError, json.JSONDecodeError, TypeError, ValueError):
-            return _localization_failure(self.ai_lang)
+            return _localization_failure(language)
 
     # ---------- notice ----------
     def _notice(self):
@@ -569,9 +614,9 @@ class Session:
 
     # ---------- optional LLM simplification ----------
     def _polish(self, text):
-        name = self.ai_lang or ("Hindi" if self.lang == "hi" else "Hinglish (Hindi in Roman script)" if self.hinglish else "English")
+        name = self.output_language
         try:
-            if name == "English":
+            if name == "English" and self.lang != "hi" and not self.ai_lang:
                 return text
             protected, numbers = _protect_numbers(text)
             system = llm_mod.REWRITE_SYSTEM.format(lang=name)
@@ -592,7 +637,7 @@ class Session:
         except llm_mod.LLMError as e:
             self.meta["llm"] = f"rewrite failed: {e}"
             if name in LOCALIZATION_FAILURE:
-                return _localization_failure(name)
+                return _rewrite_failure(e, name)
             return f"I couldn't rewrite this reply in {name}. Here is the grounded reply in English:\n\n{text}"
 
     def say(self, msg):

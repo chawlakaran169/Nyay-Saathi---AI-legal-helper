@@ -8,7 +8,7 @@ from lawyer import llm as llm_mod
 SESSIONS = {}
 HERE = os.path.dirname(os.path.abspath(__file__))
 LLM_PROVIDER = "none"
-BUILD_ID = "localized-exports-v3"
+BUILD_ID = "localized-exports-v5"
 
 
 def printable(text, sid, kind, language):
@@ -75,6 +75,9 @@ class H(BaseHTTPRequestHandler):
         body = json.loads(self.rfile.read(n) or "{}")
         sid = body.get("session") or uuid.uuid4().hex
         s = SESSIONS.setdefault(sid, Session())
+        requested_language = body.get("language")
+        if requested_language in ("English", "Hindi", "Punjabi", "Tamil", "Telugu", "Bengali", "Gujarati", "Kannada", "Malayalam"):
+            s.preferred_language = requested_language
         msg = (body.get("message") or "").strip()[:4000]
         reply = s.say(msg) if msg else ""
         self._send(200, json.dumps({"session": sid, "reply": reply, "lang": s.output_language, "violations": s.meta["violations"], "exports": s.exports_available()}))
